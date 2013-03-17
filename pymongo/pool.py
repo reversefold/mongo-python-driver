@@ -39,6 +39,10 @@ else:
     from select import select
 
 
+import logging
+log = logging.getLogger(__name__)
+
+
 NO_REQUEST = None
 NO_SOCKET_YET = -1
 
@@ -69,6 +73,7 @@ class SocketInfo(object):
         self.pool_id = pool_id
 
     def close(self):
+        #log.info('SocketInfo.close %r', self)
         self.closed = True
         # Avoid exceptions on interpreter shutdown.
         try:
@@ -259,6 +264,7 @@ class Pool:
            return_socket() when you're done with it.
         """
         sock = self.create_connection(pair)
+        #log.info('Connected a new socket: %r', sock)
         hostname = (pair or self.pair)[0]
 
         if self.use_ssl:
@@ -295,14 +301,18 @@ class Pool:
         # See test.test_client:TestClient.test_fork for an example of
         # what could go wrong otherwise
         if self.pid != os.getpid():
+            #log.info('Pid change, resetting pool')
             self.reset()
 
         # Have we opened a socket for this request?
         req_state = self._get_request_state()
         if req_state not in (NO_SOCKET_YET, NO_REQUEST):
+            #log.info('request in progress: req_state %r', req_state)
             # There's a socket for this request, check it and return it
             checked_sock = self._check(req_state, pair)
+            #log.info('checked_sock: %r', checked_sock)
             if checked_sock != req_state:
+                #log.info('checked_sock != req_state')
                 self._set_request_state(checked_sock)
 
             checked_sock.last_checkout = time.time()
@@ -314,29 +324,37 @@ class Pool:
             # max_open_sockets, but if there is no open "slot" force the connection
             # and keep track of it for later.
             if not self._socket_semaphore.acquire(False):
+                #log.info('force=True and could not acquire socket semaphore, forcing a new socket')
                 self._num_forced_sockets.inc()
         elif not self._socket_semaphore.acquire(True, self.conn_timeout):
+            #log.info('Could not acquire socket semaphore in %r', self.conn_timeout)
             raise socket.timeout()
         sock_info, from_pool = None, None
         try:
             try:
                 # TODO(reversefold): lock still needed here?
+                #log.info('Getting sock from pool queue')
                 self.lock.acquire()
                 sock_info, from_pool = self.sockets.get(False), True
+                #log.info('Got sock from pool queue: %r', sock_info)
             finally:
                 self.lock.release()
         except Queue.Empty:
             # TODO(reversefold): call settimeout with the remainder of conn_timeout?
             # would need to pass it into connect and create_connection
+            #log.info('Pool queue empty, making a new connection')
             sock_info, from_pool = self.connect(pair), False
 
         if from_pool:
+            #log.info('Checking pool socket: %r', sock_info)
             sock_info = self._check(sock_info, pair)
+            #log.info('Checked pool socket: %r', sock_info)
 
         if req_state == NO_SOCKET_YET:
             # start_request has been called but we haven't assigned a socket to
             # the request yet. Let's use this socket for this request until
             # end_request.
+            #log.info('Setting socket to req_state: %r', sock_info)
             self._set_request_state(sock_info)
 
         sock_info.last_checkout = time.time()
@@ -381,39 +399,55 @@ class Pool:
     def maybe_return_socket(self, sock_info):
         """Return the socket to the pool unless it's the request socket.
         """
+        #log.info('maybe_return_socket: %r', sock_info)
+#        import traceback
+#        log.info(''.join(traceback.format_stack()))
         if self.pid != os.getpid():
+            #log.info('Pids do not match, resetting: %r', sock_info)
             self.reset()
         elif sock_info not in (NO_REQUEST, NO_SOCKET_YET):
+            #log.info('Socket is real: %r %r %r %r', sock_info, sock_info.closed, sock_info.closed and "CLOSED" or "OPEN", id(sock_info))
             if sock_info.closed:
+                #log.info('Closed socket being returned: %r', sock_info)
                 try:
                     # Lock needed here to make sure we don't double-dec
                     # _num_forced_sockets.
                     self.lock.acquire()
                     if self._num_forced_sockets.get() > 0:
+                        #log.info('Decrementing _num_forced_sockets: %r', sock_info)
                         self._num_forced_sockets.dec()
                     else:
+                        #log.info('Releasing semaphore: %r', sock_info)
                         self._socket_semaphore.release()
                 finally:
                     self.lock.release()
                 return
 
             if sock_info != self._get_request_state():
+                #log.info('Not request socket, returning to the pool: %r', sock_info)
                 self._return_socket(sock_info)
+            #else:
+            #    log.info('Request socket, keeping: %r', sock_info)
 
     def _return_socket(self, sock_info):
         """Return socket to the pool. If pool is full the socket is discarded.
         """
+        #log.info('_return_socket: %r', sock_info)
         try:
             # Lock needed here to make sure we don't double-dec
             # _num_forced_sockets.
             self.lock.acquire()
             if self.sockets.qsize() < self.max_size:
+                #log.info('Room in the pool, returning %r', sock_info)
                 self.sockets.put(sock_info)
             else:
+                #log.info('Pool full, closing %r', sock_info)
                 sock_info.close()
             if self._num_forced_sockets.get() > 0:
+                #log.info('Decrementing _num_forced_sockets')
                 self._num_forced_sockets.dec()
             else:
+                #log.info('Releasing socket semaphore')
                 self._socket_semaphore.release()
         finally:
             self.lock.release()
@@ -434,21 +468,27 @@ class Pool:
         error = False
 
         if sock_info.closed:
+            #log.info('_check, sock already closed')
             error = True
 
         elif self.pool_id != sock_info.pool_id:
+            #log.info('_check, pool_id does not match')
             sock_info.close()
             error = True
 
         elif time.time() - sock_info.last_checkout > 1:
+            #log.info('_check, time since last checkout > 1')
             if _closed(sock_info.sock):
+                #log.info('_check, sock was closed, marking closed')
                 sock_info.close()
                 error = True
 
         if not error:
+            #log.info('_check, sock ok')
             return sock_info
         else:
             try:
+                #log.info('_check, sock dead, connecting a new one')
                 return self.connect(pair)
             except socket.error:
                 self.reset()

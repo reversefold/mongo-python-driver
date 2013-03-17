@@ -25,6 +25,9 @@ try:
 except ImportError:
     have_greenlet = False
 
+import logging
+log = logging.getLogger(__name__)
+
 
 class Ident(object):
     def __init__(self):
@@ -169,10 +172,16 @@ class BoundedSemaphore(object):
 
 class NoopSemaphore(object):
     def __init__(self, value=None):
-        pass
+        self.max_value = value or 0
+        self.value = value or 0
 
     def acquire(self, blocking=True, timeout=None):
+#        log.info('NoopSemaphore.acquire: %r', self.value)
+        self.value -= 1
         return True
 
     def release(self):
-        pass
+#        log.info('NoopSemaphore.release: %r', self.value)
+#        import traceback
+#        log.info(''.join(traceback.format_stack()))
+        self.value += 1
