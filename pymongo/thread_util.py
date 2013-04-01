@@ -345,12 +345,12 @@ class DummySemaphore(object):
         self.value = value or 0
 
     def acquire(self, blocking=True, timeout=None):
-#        log.info('NoopSemaphore.acquire: %r', self.value)
+        log.info('NoopSemaphore.acquire: %r', self.value)
         self.value -= 1
         return True
 
     def release(self):
-#        log.info('NoopSemaphore.release: %r', self.value)
+        log.info('NoopSemaphore.release: %r', self.value)
 #        import traceback
 #        log.info(''.join(traceback.format_stack()))
         self.value += 1

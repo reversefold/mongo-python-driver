@@ -675,7 +675,7 @@ class _TestMaxPoolSize(_TestPoolingBase):
     with greenlets.
     """
     def _test_max_pool_size(self, start_request, end_request):
-        pool_size = 4
+        pool_size = 2
         c = self.get_client(max_pool_size=pool_size, auto_start_request=False)
         # If you increase nthreads over about 35, note a
         # Gevent 0.13.6 bug on Mac, Greenlet.join() hangs if more than
@@ -700,6 +700,8 @@ class _TestMaxPoolSize(_TestPoolingBase):
 
         for t in threads:
             self.assertTrue(t.passed)
+
+        time.sleep(2)
 
         # Socket-reclamation doesn't work in Jython
         if not sys.platform.startswith('java'):
