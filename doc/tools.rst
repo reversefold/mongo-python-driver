@@ -100,13 +100,19 @@ various Python frameworks and libraries.
   :mod:`repoze.what`.
 * `mongobox <http://github.com/theorm/mongobox>`_ is a tool to run a sandboxed
   MongoDB instance from within a python app.
+* `Flask-MongoAlchemy <http://github.com/cobrateam/flask-mongoalchemy/>`_ Add
+  Flask support for MongoDB using MongoAlchemy.
+* `Flask-MongoKit <http://github.com/jarus/flask-mongokit/>`_ Flask extension
+  to better integrate MongoKit into Flask.
+* `Flask-PyMongo <http://github.com/dcrosta/flask-pymongo/>`_ Flask-PyMongo
+  bridges Flask and PyMongo.
 
 Alternative Drivers
 -------------------
 These are alternatives to PyMongo.
 
-* `asyncmongo <https://github.com/bitly/asyncmongo>`_ is an asynchronous library
-  for accessing mongo which is built on the tornado ioloop.
+* `Motor <https://github.com/mongodb/motor>`_ is a full-featured, non-blocking
+  MongoDB driver for Python Tornado applications.
 * `TxMongo <http://github.com/fiorix/mongo-async-python-driver>`_ is an
   asynchronous Python driver for MongoDB, although it is not currently
   recommended for production use.
