@@ -177,6 +177,8 @@ class Pool:
             self._socket_semaphore = thread_util.BoundedSemaphore(
                 self.max_size, self.use_greenlets)
 
+        self.outstanding_socks = set()
+
     def reset(self):
         # Ignore this race condition -- if many threads are resetting at once,
         # the pool_id will definitely change, which is all we care about.
@@ -313,6 +315,9 @@ class Pool:
                 self._set_request_state(checked_sock)
 
             checked_sock.last_checkout = time.time()
+            if checked_sock in self.outstanding_socks:
+                raise Exception()
+            self.outstanding_socks.add(checked_sock)
             return checked_sock
 
         forced = False
@@ -358,6 +363,7 @@ class Pool:
             self._set_request_state(sock_info)
 
         sock_info.last_checkout = time.time()
+        self.outstanding_socks.add(sock_info)
         return sock_info
 
     def start_request(self):
@@ -403,6 +409,8 @@ class Pool:
         #log.info('maybe_return_socket: %r', sock_info)
 #        import traceback
 #        log.info(''.join(traceback.format_stack()))
+        if sock_info not in self.outstanding_socks:
+            raise Exception()
         if self.pid != os.getpid():
             #log.info('Pids do not match, resetting: %r', sock_info)
             self.reset()
@@ -415,6 +423,8 @@ class Pool:
                 ):
                     #log.info('Releasing semaphore: %r', sock_info)
                     self._socket_semaphore.release()
+
+                self.outstanding_socks.remove(sock_info)
                 return
 
             if sock_info != self._get_request_state():
@@ -427,6 +437,9 @@ class Pool:
         """Return socket to the pool. If pool is full the socket is discarded.
         """
         #log.info('_return_socket: %r', sock_info)
+        if sock_info not in self.outstanding_socks:
+            raise Exception()
+        self.outstanding_socks.remove(sock_info)
         if (len(self.sockets) < self.max_size
             and sock_info.pool_id == self.pool_id
         ):
