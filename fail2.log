@@ -1,0 +1,283 @@
+/Users/justin/src/mongo-python-driver/pymongo/thread_util.py:26: UserWarning: libevent version mismatch: system version is '2.0.21-stable' but this gevent is compiled against '2.0.19-stable'
+  import gevent.coros
+F
+======================================================================
+FAIL: test_max_pool_size_with_leaked_request (test.test_pooling.TestMaxPoolSizeThreads)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/justin/src/mongo-python-driver/test/test_pooling_base.py", line 753, in test_max_pool_size_with_leaked_request
+    self._test_max_pool_size(1, 0)
+  File "/Users/justin/src/mongo-python-driver/test/test_pooling_base.py", line 729, in _test_max_pool_size
+    self.assertEqual(pool_size, len(cx_pool.sockets))
+AssertionError: 2 != 1
+-------------------- >> begin captured logging << --------------------
+pymongo.pool: INFO: [4438960400] Getting sock from pool
+pymongo.pool: INFO: [4438960400] Pool queue empty, making a new connection
+pymongo.pool: INFO: Connected a new socket: <socket._socketobject object at 0x108934830>
+pymongo.pool: INFO: [4438960400] new connection: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] returning socket SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] maybe_return_socket: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] Socket is real: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784 False 'OPEN' 4438960784
+pymongo.pool: INFO: [4438960400] Not request socket, returning to the pool: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] _return_socket: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] Room in the pool, returning SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] Releasing socket semaphore
+pymongo.pool: INFO: [4438960400] Getting sock from pool
+pymongo.pool: INFO: [4438960400] Got sock from pool: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] Checking pool socket: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] _check, sock ok
+pymongo.pool: INFO: [4438960400] Checked pool socket: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] returning socket SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] maybe_return_socket: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] Socket is real: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784 False 'OPEN' 4438960784
+pymongo.pool: INFO: [4438960400] Not request socket, returning to the pool: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] _return_socket: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] Room in the pool, returning SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] Releasing socket semaphore
+pymongo.pool: INFO: [4438960400] Getting sock from pool
+pymongo.pool: INFO: [4438960400] Got sock from pool: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] Checking pool socket: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] _check, sock ok
+pymongo.pool: INFO: [4438960400] Checked pool socket: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] returning socket SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] maybe_return_socket: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] Socket is real: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784 False 'OPEN' 4438960784
+pymongo.pool: INFO: [4438960400] Not request socket, returning to the pool: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] _return_socket: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] Room in the pool, returning SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] Releasing socket semaphore
+pymongo.pool: INFO: [4438960400] Getting sock from pool
+pymongo.pool: INFO: [4438960400] Got sock from pool: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] Checking pool socket: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] _check, sock ok
+pymongo.pool: INFO: [4438960400] Checked pool socket: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] returning socket SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] maybe_return_socket: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] Socket is real: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784 False 'OPEN' 4438960784
+pymongo.pool: INFO: [4438960400] Not request socket, returning to the pool: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] _return_socket: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] Room in the pool, returning SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] Releasing socket semaphore
+pymongo.pool: INFO: [4438960400] Getting sock from pool
+pymongo.pool: INFO: [4438960400] Got sock from pool: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] Checking pool socket: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] _check, time since last checkout > 1
+pymongo.pool: INFO: [4438960400] _check, sock ok
+pymongo.pool: INFO: [4438960400] Checked pool socket: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] returning socket SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] maybe_return_socket: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] Socket is real: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784 False 'OPEN' 4438960784
+pymongo.pool: INFO: [4438960400] Not request socket, returning to the pool: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] _return_socket: SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] Room in the pool, returning SocketInfo(<socket._socketobject object at 0x108934830>) at 4438960784
+pymongo.pool: INFO: [4438960400] Releasing socket semaphore
+pymongo.pool: INFO: [4438982224] Getting sock from pool
+pymongo.pool: INFO: [4438982224] Pool queue empty, making a new connection
+pymongo.pool: INFO: Connected a new socket: <socket._socketobject object at 0x108934980>
+pymongo.pool: INFO: [4438982224] new connection: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4438982224] returning socket SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4438982224] maybe_return_socket: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4438982224] Socket is real: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608 False 'OPEN' 4438982608
+pymongo.pool: INFO: [4438982224] Not request socket, returning to the pool: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4438982224] _return_socket: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4438982224] Room in the pool, returning SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4438982224] Releasing socket semaphore
+pymongo.pool: INFO: [4438994256] _set_request_state -1
+pymongo.pool: INFO: [4438994256] Watching thread
+pymongo.pool: INFO: [4438994256] Getting sock from pool
+pymongo.pool: INFO: [4438994256] Got sock from pool: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4438994256] Checking pool socket: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4438994256] _check, sock ok
+pymongo.pool: INFO: [4438994256] Checked pool socket: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4438994256] Setting socket to req_state: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4438994256] _set_request_state SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4438994256] Already watching thread
+pymongo.pool: INFO: [4438994256] returning socket SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439004432] _set_request_state -1
+pymongo.pool: INFO: [4439004432] Watching thread
+pymongo.pool: INFO: [4439004432] Getting sock from pool
+pymongo.pool: INFO: [4439004432] Pool queue empty, making a new connection
+pymongo.pool: INFO: [4439006160] _set_request_state -1
+pymongo.pool: INFO: [4439006160] Watching thread
+pymongo.pool: INFO: [4438994256] maybe_return_socket: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4438994256] Socket is real: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608 False 'OPEN' 4438982608
+pymongo.pool: INFO: [4438994256] Request socket, keeping: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4438994192] _set_request_state -1
+pymongo.pool: INFO: [4438994192] Watching thread
+pymongo.pool: INFO: [4439016144] _set_request_state -1
+pymongo.pool: INFO: Connected a new socket: <socket._socketobject object at 0x1089349f0>
+pymongo.pool: INFO: [4439016144] Watching thread
+pymongo.pool: INFO: [4439004432] new connection: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439004432] Setting socket to req_state: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439004432] _set_request_state SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439004432] Already watching thread
+pymongo.pool: INFO: [4439004432] returning socket SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439017872] _set_request_state -1
+pymongo.pool: INFO: [4439017872] Watching thread
+pymongo.pool: INFO: [4439018384] _set_request_state -1
+pymongo.pool: INFO: [4439018384] Watching thread
+pymongo.pool: INFO: [4439004432] maybe_return_socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439004432] Socket is real: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168 False 'OPEN' 4439017168
+pymongo.pool: INFO: [4439004432] Request socket, keeping: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439004432] Thread died
+pymongo.pool: INFO: [4439004432] Pool still alive on thread death: <pymongo.pool.Pool instance at 0x108958a28>
+pymongo.pool: INFO: [4439004432] thread had a socket SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168, returning to the pool
+pymongo.pool: INFO: [4439028176] _return_socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439028176] Room in the pool, returning SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439028176] Releasing socket semaphore
+pymongo.pool: INFO: [4439004432] _set_request_state -1
+pymongo.pool: INFO: [4439004432] Already watching thread
+pymongo.pool: INFO: [4439006160] Getting sock from pool
+pymongo.pool: INFO: [4439006160] Got sock from pool: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439006160] Checking pool socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439006160] _check, sock ok
+pymongo.pool: INFO: [4439006160] Checked pool socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439006160] Setting socket to req_state: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439006160] _set_request_state SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439006160] Already watching thread
+pymongo.pool: INFO: [4439006160] returning socket SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439004752] _set_request_state -1
+pymongo.pool: INFO: [4439004752] Watching thread
+pymongo.pool: INFO: [4439006160] maybe_return_socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4438994256] Thread died
+pymongo.pool: INFO: [4438994256] Pool still alive on thread death: <pymongo.pool.Pool instance at 0x108958a28>
+pymongo.pool: INFO: [4438994256] thread had a socket SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608, returning to the pool
+pymongo.pool: INFO: [4439031312] _set_request_state -1
+pymongo.pool: INFO: [4439031184] _return_socket: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439006160] Socket is real: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168 False 'OPEN' 4439017168
+pymongo.pool: INFO: [4439031312] Watching thread
+pymongo.pool: INFO: [4439031184] Room in the pool, returning SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439006160] Request socket, keeping: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439031184] Releasing socket semaphore
+pymongo.pool: INFO: [4439006160] Thread died
+pymongo.pool: INFO: [4439006160] Pool still alive on thread death: <pymongo.pool.Pool instance at 0x108958a28>
+pymongo.pool: INFO: [4439006160] thread had a socket SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168, returning to the pool
+pymongo.pool: INFO: [4438994256] _return_socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4438994256] Room in the pool, returning SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4438994256] Releasing socket semaphore
+pymongo.pool: INFO: [4439016144] Getting sock from pool
+pymongo.pool: INFO: [4439016144] Got sock from pool: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439016144] Checking pool socket: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439016144] _check, sock ok
+pymongo.pool: INFO: [4439016144] Checked pool socket: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439016144] Setting socket to req_state: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439016144] _set_request_state SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439016144] Already watching thread
+pymongo.pool: INFO: [4439016144] returning socket SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4438994192] Getting sock from pool
+pymongo.pool: INFO: [4438994192] Got sock from pool: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4438994192] Checking pool socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4438994192] _check, sock ok
+pymongo.pool: INFO: [4438994192] Checked pool socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4438994192] Setting socket to req_state: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4438994192] _set_request_state SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4438994192] Already watching thread
+pymongo.pool: INFO: [4438994192] returning socket SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439016144] maybe_return_socket: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439016144] Socket is real: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608 False 'OPEN' 4438982608
+pymongo.pool: INFO: [4439016144] Request socket, keeping: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439016144] Thread died
+pymongo.pool: INFO: [4439016144] Pool still alive on thread death: <pymongo.pool.Pool instance at 0x108958a28>
+pymongo.pool: INFO: [4439016144] thread had a socket SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608, returning to the pool
+pymongo.pool: INFO: [4439041872] _return_socket: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439041872] Room in the pool, returning SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439041872] Releasing socket semaphore
+pymongo.pool: INFO: [4439017872] Getting sock from pool
+pymongo.pool: INFO: [4438994192] maybe_return_socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439017872] Got sock from pool: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4438994192] Socket is real: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168 False 'OPEN' 4439017168
+pymongo.pool: INFO: [4438994192] Request socket, keeping: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4438994192] Thread died
+pymongo.pool: INFO: [4438994192] Pool still alive on thread death: <pymongo.pool.Pool instance at 0x108958a28>
+pymongo.pool: INFO: [4438994192] thread had a socket SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168, returning to the pool
+pymongo.pool: INFO: [4439042448] _return_socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439017872] Checking pool socket: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439042448] Room in the pool, returning SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439017872] _check, sock ok
+pymongo.pool: INFO: [4439042448] Releasing socket semaphore
+pymongo.pool: INFO: [4439017872] Checked pool socket: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439018384] Getting sock from pool
+pymongo.pool: INFO: [4439017872] Setting socket to req_state: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439018384] Got sock from pool: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439017872] _set_request_state SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439018384] Checking pool socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439017872] Already watching thread
+pymongo.pool: INFO: [4439018384] _check, sock ok
+pymongo.pool: INFO: [4439017872] returning socket SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439018384] Checked pool socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439018384] Setting socket to req_state: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439018384] _set_request_state SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439018384] Already watching thread
+pymongo.pool: INFO: [4439018384] returning socket SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439017872] maybe_return_socket: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439017872] Socket is real: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608 False 'OPEN' 4438982608
+pymongo.pool: INFO: [4439017872] Request socket, keeping: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439017872] Thread died
+pymongo.pool: INFO: [4439017872] Pool still alive on thread death: <pymongo.pool.Pool instance at 0x108958a28>
+pymongo.pool: INFO: [4439017872] thread had a socket SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608, returning to the pool
+pymongo.pool: INFO: [4439043664] _return_socket: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439043664] Room in the pool, returning SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439043664] Releasing socket semaphore
+pymongo.pool: INFO: [4439018384] maybe_return_socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439018384] Socket is real: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168 False 'OPEN' 4439017168
+pymongo.pool: INFO: [4439018384] Request socket, keeping: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439018384] Thread died
+pymongo.pool: INFO: [4439018384] Pool still alive on thread death: <pymongo.pool.Pool instance at 0x108958a28>
+pymongo.pool: INFO: [4439018384] thread had a socket SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168, returning to the pool
+pymongo.pool: INFO: [4439004432] Getting sock from pool
+pymongo.pool: INFO: [4439005456] _return_socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439004432] Got sock from pool: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439005456] Room in the pool, returning SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439004432] Checking pool socket: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439005456] Releasing socket semaphore
+pymongo.pool: INFO: [4439004432] _check, sock ok
+pymongo.pool: INFO: [4439004432] Checked pool socket: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439004432] Setting socket to req_state: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439004432] _set_request_state SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439004432] Already watching thread
+pymongo.pool: INFO: [4439004432] returning socket SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439004752] Getting sock from pool
+pymongo.pool: INFO: [4439004752] Got sock from pool: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439004752] Checking pool socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439004752] _check, sock ok
+pymongo.pool: INFO: [4439004752] Checked pool socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439004752] Setting socket to req_state: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439004752] _set_request_state SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439004752] Already watching thread
+pymongo.pool: INFO: [4439004752] returning socket SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439004432] maybe_return_socket: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439004432] Socket is real: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608 False 'OPEN' 4438982608
+pymongo.pool: INFO: [4439004432] Request socket, keeping: SocketInfo(<socket._socketobject object at 0x108934980>) at 4438982608
+pymongo.pool: INFO: [4439004752] maybe_return_socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439004752] Socket is real: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168 False 'OPEN' 4439017168
+pymongo.pool: INFO: [4439004752] Request socket, keeping: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439004752] Thread died
+pymongo.pool: INFO: [4439004752] Pool still alive on thread death: <pymongo.pool.Pool instance at 0x108958a28>
+pymongo.pool: INFO: [4439004752] thread had a socket SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168, returning to the pool
+pymongo.pool: INFO: [4439029008] _return_socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439029008] Room in the pool, returning SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439029008] Releasing socket semaphore
+pymongo.pool: INFO: [4439031312] Getting sock from pool
+pymongo.pool: INFO: [4439031312] Got sock from pool: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439031312] Checking pool socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439031312] _check, sock ok
+pymongo.pool: INFO: [4439031312] Checked pool socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439031312] Setting socket to req_state: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439031312] _set_request_state SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439031312] Already watching thread
+pymongo.pool: INFO: [4439031312] returning socket SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439031312] maybe_return_socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439031312] Socket is real: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168 False 'OPEN' 4439017168
+pymongo.pool: INFO: [4439031312] Request socket, keeping: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439031312] Thread died
+pymongo.pool: INFO: [4439031312] Pool still alive on thread death: <pymongo.pool.Pool instance at 0x108958a28>
+pymongo.pool: INFO: [4439031312] thread had a socket SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168, returning to the pool
+pymongo.pool: INFO: [4439058512] _return_socket: SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439058512] Room in the pool, returning SocketInfo(<socket._socketobject object at 0x1089349f0>) at 4439017168
+pymongo.pool: INFO: [4439058512] Releasing socket semaphore
+--------------------- >> end captured logging << ---------------------
+
+----------------------------------------------------------------------
+Ran 1 test in 3.638s
+
+FAILED (failures=1)
