@@ -301,6 +301,7 @@ class Semaphore:
         self._value = value
 
     def acquire(self, blocking=True, timeout=None):
+        log.info('Semaphore.acquire start (%r)', self._value)
         if not blocking and timeout is not None:
             raise ValueError("can't specify timeout for non-blocking acquire")
         rc = False
@@ -321,15 +322,18 @@ class Semaphore:
             self._value = self._value - 1
             rc = True
         self._cond.release()
+        log.info('Semaphore.acquire end (%r)', self._value)
         return rc
 
     __enter__ = acquire
 
     def release(self):
+        log.info('Semaphore.release start (%r)', self._value)
         self._cond.acquire()
         self._value = self._value + 1
         self._cond.notify()
         self._cond.release()
+        log.info('Semaphore.release end (%r)', self._value)
 
     def __exit__(self, t, v, tb):
         self.release()
@@ -338,11 +342,13 @@ class Semaphore:
 class BoundedSemaphore(Semaphore):
     """Semaphore that checks that # releases is <= # acquires"""
     def __init__(self, value=1, use_greenlets=False):
+        log.info('BoundedSemaphore.__init__')
         Semaphore.__init__(self, value, use_greenlets)
         self._initial_value = value
 
     def release(self):
         if self._value >= self._initial_value:
+            log.info('Semaphore released too many times')
             raise ValueError("Semaphore released too many times")
         return Semaphore.release(self)
 ### End backport from CPython 3.2
