@@ -30,6 +30,10 @@ except ImportError:
     have_greenlet = False
 
 
+import logging
+log = logging.getLogger(__name__)
+
+
 class Ident(object):
     def __init__(self):
         self._refs = {}
@@ -41,7 +45,7 @@ class Ident(object):
     def unwatch(self, tid=None):
         if tid is None:
             tid = self.get()
-        self._refs.pop(self.get(), None)
+        self._refs.pop(tid, None)
 
     def get(self):
         """An id for this thread or greenlet"""
@@ -62,15 +66,22 @@ class ThreadIdent(Ident):
     # We watch for thread-death using a weakref callback to a thread local.
     # Weakrefs are permitted on subclasses of object but not object() itself.
     class ThreadVigil(object):
-        pass
+        def __init__(self):
+#            log.info('[%r] ThreadIdent.ThreadVigil.__init__', id(self))
+            pass
 
     def get(self):
         if not hasattr(self._local, 'vigil'):
-            self._local.vigil = ThreadIdent.ThreadVigil()
-        return id(self._local.vigil)
+            vigil = ThreadIdent.ThreadVigil()
+            while id(vigil) in self._refs:
+                vigil = ThreadIdent.ThreadVigil()
+            self._local.vigil = vigil
+        tid = id(self._local.vigil)
+        return tid
 
     def watch(self, callback):
         tid = self.get()
+#        log.info('[%r] ThreadIdent.watch', tid)
         self._refs[tid] = weakref.ref(self._local.vigil, callback)
 
     def watching(self):
@@ -143,6 +154,7 @@ class Semaphore:
     def __init__(self, value=1):
         if value < 0:
             raise ValueError("semaphore initial value must be >= 0")
+        log.info('Semaphore.__init__(%r)', value)
         self._cond = threading.Condition(threading.Lock())
         self._value = value
 
@@ -152,6 +164,7 @@ class Semaphore:
         rc = False
         endtime = None
         self._cond.acquire()
+        log.info('Semaphore.acquire (%r)', self._value)
         while self._value == 0:
             if not blocking:
                 break
@@ -173,6 +186,7 @@ class Semaphore:
 
     def release(self):
         self._cond.acquire()
+        log.info('Semaphore.release (%r)', self._value)
         self._value = self._value + 1
         self._cond.notify()
         self._cond.release()

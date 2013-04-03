@@ -42,6 +42,10 @@ except ImportError:
     pass
 
 
+import logging
+log = logging.getLogger(__name__)
+
+
 NO_REQUEST = None
 NO_SOCKET_YET = -1
 
@@ -367,7 +371,15 @@ class Pool:
         sock_info.last_checkout = time.time()
         return sock_info
 
+    __get_socket = get_socket
+    def _get_socket(self, pair=None, force=False):
+        sock = self.__get_socket(pair, force)
+        log.info('[%r] Pool.get_socket got %r', self._ident.get(), sock)
+        return sock
+    get_socket = _get_socket
+
     def start_request(self):
+        log.info('[%r] Pool.start_request', self._ident.get())
         if self._get_request_state() == NO_REQUEST:
             # Add a placeholder value so we know we're in a request, but we
             # have no socket assigned to the request yet.
@@ -381,6 +393,8 @@ class Pool:
     def end_request(self):
         # TODO(reversefold): Is this needed? tid is never used
         tid = self._ident.get()
+
+        log.info('[%r] Pool.end_request', tid)
 
         # Check if start_request has ever been called in this thread / greenlet
         count = self._request_counter.get()
@@ -422,9 +436,12 @@ class Pool:
             if sock_info != self._get_request_state():
                 self._return_socket(sock_info)
 
-    def _return_socket(self, sock_info):
+    def _return_socket(self, sock_info, tid=None):
         """Return socket to the pool. If pool is full the socket is discarded.
         """
+        if tid is None:
+            tid = self._ident.get()
+        log.info('[%r] Pool._return_socket returning %r', tid, sock_info)
         try:
             self.lock.acquire()
             if (len(self.sockets) < self.max_size
@@ -492,6 +509,7 @@ class Pool:
             self._tid_to_sock[tid] = sock_info
 
             if not ident.watching():
+                log.info('[%r] Pool._set_request_state Not yet watching thread', tid)
                 # Closure over tid, poolref, and ident. Don't refer directly to
                 # self, otherwise there's a cycle.
 
@@ -505,20 +523,31 @@ class Pool:
                 poolref = weakref.ref(self)
                 def on_thread_died(ref):
                     try:
+                        log.info('[%r] on_thread_died', tid)
                         ident.unwatch(tid)
                         pool = poolref()
                         if pool:
+                            log.info('[%r] on_thread_died pool active', tid)
                             # End the request
                             request_sock = pool._tid_to_sock.pop(tid, None)
 
                             # Was thread ever assigned a socket before it died?
                             if request_sock not in (NO_REQUEST, NO_SOCKET_YET):
-                                pool._return_socket(request_sock)
+                                log.info('[%r] on_thread_died returning request_sock %r', tid, request_sock)
+                                pool._return_socket(request_sock, tid)
                     except:
                         # Random exceptions on interpreter shutdown.
+                        try:
+                            log.info('[%r] Exception in on_thread_died', tid)
+                            import traceback
+                            traceback.print_exc()
+                        except:
+                            pass
                         pass
 
                 ident.watch(on_thread_died)
+            else:
+                log.info('[%r] Pool._set_request_state Already watching thread', tid)
 
     def _get_request_state(self):
         tid = self._ident.get()

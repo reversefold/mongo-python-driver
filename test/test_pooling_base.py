@@ -74,7 +74,29 @@ class MongoThread(object):
         self.thread.start()
 
     def join(self):
-        self.thread.join(300)
+        start = time.time()
+        while time.time() - start < 10:
+            self.thread.join(1)
+
+            # Access the thread local from the main thread to trigger the
+            # ThreadVigil's delete callback, returning the request socket to
+            # the pool.
+            # In Python 2.6 and lesser, a dead thread's locals are deleted
+            # and those locals' weakref callbacks are fired only when another
+            # thread accesses the locals and finds the thread state is stale.
+            # This is more or less a bug in Python <= 2.6. Accessing the thread
+            # local from the main thread is a necessary part of this test, and
+            # realistic: in a multithreaded web server a new thread will access
+            # Pool._ident._local soon after an old thread has died.
+            self.client._MongoClient__pool._ident.get()
+
+            if self.use_greenlets:
+                if self.thread.dead:
+                    break
+            else:
+                if not self.thread.isAlive():
+                    break
+
         if self.use_greenlets:
             assert self.thread.dead, "Greenlet timeout"
         else:
@@ -682,7 +704,7 @@ class _TestMaxPoolSize(_TestPoolingBase):
         # Gevent 0.13.6 bug on Mac, Greenlet.join() hangs if more than
         # about 35 Greenlets share a MongoClient. Apparently fixed in
         # recent Gevent development.
-        nthreads = 10
+        nthreads = 4
 
         rendevous = CreateAndReleaseSocket.Rendezvous(
             nthreads, self.use_greenlets)
