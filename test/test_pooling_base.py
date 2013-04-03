@@ -704,7 +704,7 @@ class _TestMaxPoolSize(_TestPoolingBase):
         # Gevent 0.13.6 bug on Mac, Greenlet.join() hangs if more than
         # about 35 Greenlets share a MongoClient. Apparently fixed in
         # recent Gevent development.
-        nthreads = 4
+        nthreads = 10
 
         rendevous = CreateAndReleaseSocket.Rendezvous(
             nthreads, self.use_greenlets)
