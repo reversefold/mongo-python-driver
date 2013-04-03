@@ -722,10 +722,18 @@ class _TestMaxPoolSize(_TestPoolingBase):
                     # Gevent 0.13 and less
                     the_hub.shutdown()
 
-            # NOTE(reversefold): When running these tests sockets are getting
-            # leaked when end_request is not properly called, but only
-            # sometimes. I suspect that the thread death code is not always
-            # called but am not sure why.
+            # Access the thread local from the main thread to trigger the
+            # ThreadVigil's delete callback, returning the request socket to
+            # the pool.
+            # In Python 2.6 and lesser, a dead thread's locals are deleted
+            # and those locals' weakref callbacks are fired only when another
+            # thread accesses the locals and finds the thread state is stale.
+            # This is more or less a bug in Python <= 2.6. Accessing the thread
+            # local from the main thread is a necessary part of this test, and
+            # realistic: in a multithreaded web server a new thread will access
+            # Pool._ident._local soon after an old thread has died.
+            cx_pool._ident.get()
+
             if start_request:
                 self.assertEqual(pool_size, len(cx_pool.sockets))
             else:
