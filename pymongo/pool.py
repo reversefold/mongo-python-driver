@@ -500,6 +500,8 @@ class Pool:
     def _set_request_state(self, sock_info):
         ident = self._ident
         tid = ident.get()
+        import thread
+        tident = thread.get_ident()
 
         if sock_info == NO_REQUEST:
             # Ending a request
@@ -523,7 +525,7 @@ class Pool:
                 poolref = weakref.ref(self)
                 def on_thread_died(ref):
                     try:
-                        log.info('[%r] on_thread_died', tid)
+                        log.info('[%r] [%r] on_thread_died', tid, tident)
                         ident.unwatch(tid)
                         pool = poolref()
                         if pool:

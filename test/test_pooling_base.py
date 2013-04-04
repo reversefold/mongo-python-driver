@@ -53,6 +53,10 @@ except ImportError:
     has_gevent = False
 
 
+import logging
+log = logging.getLogger(__name__)
+
+
 class MongoThread(object):
     """A thread, or a greenlet, that uses a MongoClient"""
     def __init__(self, test_case):
@@ -75,7 +79,7 @@ class MongoThread(object):
 
     def join(self):
         start = time.time()
-        while time.time() - start < 10:
+        while time.time() - start < 30:
             self.thread.join(1)
 
             # Access the thread local from the main thread to trigger the
@@ -105,10 +109,14 @@ class MongoThread(object):
         self.thread = None
 
     def run(self):
-        self.run_mongo_thread()
+        try:
+            log.info('[%r] [%r] Thread starting', self.client._MongoClient__pool._ident.get(), thread.get_ident())
+            self.run_mongo_thread()
 
-        # No exceptions thrown
-        self.passed = True
+            # No exceptions thrown
+            self.passed = True
+        finally:
+            log.info('[%r] [%r] Thread ending', self.client._MongoClient__pool._ident.get(), thread.get_ident())
 
     def run_mongo_thread(self):
         raise NotImplementedError()
@@ -243,13 +251,16 @@ class CreateAndReleaseSocket(MongoThread):
         self.rendevous = rendevous
 
     def run_mongo_thread(self):
+        tident = thread.get_ident()
         # Do an operation that requires a socket.
         # test_max_pool_size uses this to spin up lots of threads requiring
         # lots of simultaneous connections, to ensure that Pool obeys its
         # max_size configuration and closes extra sockets as they're returned.
+        log.info('[%r] Starting request', tident)
         for i in range(self.start_request):
             self.client.start_request()
 
+        log.info('[%r] Finding one', tident)
         # Use a socket
         self.client[DB].test.find_one()
 
@@ -260,16 +271,20 @@ class CreateAndReleaseSocket(MongoThread):
         if ((r.nthreads_run % self.pool_size) == 0
             or r.nthreads_run == r.nthreads
         ):
+            log.info('[%r] Last thread at the rendezvous', tident)
             # Everyone's here, let them finish
             r.ready.set()
             r.lock.release()
         else:
+            log.info('[%r] Waiting at the rendezvous', tident)
             r.lock.release()
             r.ready.wait(2) # Wait two seconds
             assert r.ready.isSet(), "Rendezvous timed out"
 
+        log.info('[%r] Ending request', tident)
         for i in range(self.end_request):
             self.client.end_request()
+        log.info('[%r] Done', tident)
 
 
 class _TestPoolingBase(object):
@@ -698,13 +713,13 @@ class _TestMaxPoolSize(_TestPoolingBase):
     with greenlets.
     """
     def _test_max_pool_size(self, start_request, end_request):
-        pool_size = 2
+        pool_size = 4
         c = self.get_client(max_pool_size=pool_size, auto_start_request=False)
         # If you increase nthreads over about 35, note a
         # Gevent 0.13.6 bug on Mac, Greenlet.join() hangs if more than
         # about 35 Greenlets share a MongoClient. Apparently fixed in
         # recent Gevent development.
-        nthreads = 10
+        nthreads = 50
 
         rendevous = CreateAndReleaseSocket.Rendezvous(
             nthreads, self.use_greenlets)
