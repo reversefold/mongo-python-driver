@@ -1,0 +1,883 @@
+F
+======================================================================
+FAIL: test_max_pool_size_with_leaked_request (test.test_pooling.TestMaxPoolSizeThreads)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/justin/src/mongo-python-driver/test/test_pooling_base.py", line 799, in test_max_pool_size_with_leaked_request
+    self._test_max_pool_size(1, 0)
+  File "/Users/justin/src/mongo-python-driver/test/test_pooling_base.py", line 775, in _test_max_pool_size
+    self.assertEqual(pool_size, len(cx_pool.sockets))
+AssertionError: 4 != 2
+-------------------- >> begin captured logging << --------------------
+pymongo.thread_util: INFO: Semaphore.__init__(100)
+pymongo.thread_util: INFO: Semaphore.acquire (100)
+pymongo.pool: INFO: [4319443856] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x1014e8de0>) at 4319443984
+pymongo.pool: INFO: [4319443856] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x1014e8de0>) at 4319443984
+pymongo.thread_util: INFO: Semaphore.release (99)
+pymongo.thread_util: INFO: Semaphore.acquire (100)
+pymongo.pool: INFO: [4319443856] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x1014e8de0>) at 4319443984
+pymongo.pool: INFO: [4319443856] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x1014e8de0>) at 4319443984
+pymongo.thread_util: INFO: Semaphore.release (99)
+pymongo.thread_util: INFO: Semaphore.acquire (100)
+pymongo.pool: INFO: [4319443856] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x1014e8de0>) at 4319443984
+pymongo.pool: INFO: [4319443856] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x1014e8de0>) at 4319443984
+pymongo.thread_util: INFO: Semaphore.release (99)
+pymongo.thread_util: INFO: Semaphore.acquire (100)
+pymongo.pool: INFO: [4319443856] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x1014e8de0>) at 4319443984
+pymongo.pool: INFO: [4319443856] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x1014e8de0>) at 4319443984
+pymongo.thread_util: INFO: Semaphore.release (99)
+pymongo.thread_util: INFO: Semaphore.acquire (100)
+pymongo.pool: INFO: [4319443856] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x1014e8de0>) at 4319443984
+pymongo.pool: INFO: [4319443856] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x1014e8de0>) at 4319443984
+pymongo.thread_util: INFO: Semaphore.release (99)
+pymongo.thread_util: INFO: Semaphore.__init__(4)
+pymongo.thread_util: INFO: Semaphore.acquire (4)
+pymongo.pool: INFO: [4319498384] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+pymongo.pool: INFO: [4319498384] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+pymongo.thread_util: INFO: Semaphore.release (3)
+test.test_pooling_base: INFO: [4319521168] [4320174080] Thread starting
+test.test_pooling_base: INFO: [4320174080] Starting request
+pymongo.pool: INFO: [4319521168] Pool.start_request
+pymongo.pool: INFO: [4319521168] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4320174080] Finding one
+pymongo.thread_util: INFO: Semaphore.acquire (4)
+pymongo.pool: INFO: [4319521168] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319521168] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+test.test_pooling_base: INFO: [4319531152] [4320710656] Thread starting
+test.test_pooling_base: INFO: [4320710656] Starting request
+test.test_pooling_base: INFO: [4320174080] Waiting at the rendezvous
+pymongo.pool: INFO: [4319531152] Pool.start_request
+test.test_pooling_base: INFO: [4319531984] [4324855808] Thread starting
+pymongo.pool: INFO: [4319531152] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4324855808] Starting request
+test.test_pooling_base: INFO: [4320710656] Finding one
+pymongo.pool: INFO: [4319531984] Pool.start_request
+pymongo.thread_util: INFO: Semaphore.acquire (3)
+pymongo.pool: INFO: [4319531984] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4324855808] Finding one
+pymongo.thread_util: INFO: Semaphore.acquire (2)
+test.test_pooling_base: INFO: [4319534544] [4326952960] Thread starting
+test.test_pooling_base: INFO: [4326952960] Starting request
+pymongo.pool: INFO: [4319534544] Pool.start_request
+pymongo.pool: INFO: [4319534544] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4326952960] Finding one
+pymongo.thread_util: INFO: Semaphore.acquire (1)
+pymongo.pool: INFO: [4319531152] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319531152] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319531984] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319531984] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319534544] Pool._set_request_state Already watching thread
+test.test_pooling_base: INFO: [4319540816] [4327489536] Thread starting
+pymongo.pool: INFO: [4319534544] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b360>) at 4319540176
+test.test_pooling_base: INFO: [4327489536] Starting request
+pymongo.pool: INFO: [4319540816] Pool.start_request
+pymongo.pool: INFO: [4319540816] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4327489536] Finding one
+test.test_pooling_base: INFO: [4320710656] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4319533392] [4328026112] Thread starting
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+test.test_pooling_base: INFO: [4326952960] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4328026112] Starting request
+pymongo.pool: INFO: [4319533392] Pool.start_request
+test.test_pooling_base: INFO: [4319539728] [4357361664] Thread starting
+pymongo.pool: INFO: [4319533392] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4324855808] Last thread at the rendezvous
+test.test_pooling_base: INFO: [4357361664] Starting request
+test.test_pooling_base: INFO: [4328026112] Finding one
+test.test_pooling_base: INFO: [4319551952] [4357898240] Thread starting
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+test.test_pooling_base: INFO: [4357898240] Starting request
+test.test_pooling_base: INFO: [4319552848] [4358434816] Thread starting
+pymongo.pool: INFO: [4319539728] Pool.start_request
+pymongo.pool: INFO: [4319551952] Pool.start_request
+test.test_pooling_base: INFO: [4324855808] Ending request
+test.test_pooling_base: INFO: [4358434816] Starting request
+test.test_pooling_base: INFO: [4319554256] [4358971392] Thread starting
+pymongo.pool: INFO: [4319539728] Pool._set_request_state Not yet watching thread
+pymongo.pool: INFO: [4319551952] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4324855808] Done
+pymongo.pool: INFO: [4319552848] Pool.start_request
+test.test_pooling_base: INFO: [4319555408] [4359507968] Thread starting
+test.test_pooling_base: INFO: [4358971392] Starting request
+test.test_pooling_base: INFO: [4357898240] Finding one
+test.test_pooling_base: INFO: [4319531984] [4324855808] Thread ending
+test.test_pooling_base: INFO: [4319556752] [4360044544] Thread starting
+test.test_pooling_base: INFO: [4357361664] Finding one
+test.test_pooling_base: INFO: [4320710656] Ending request
+pymongo.pool: INFO: [4319552848] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4359507968] Starting request
+pymongo.pool: INFO: [4319554256] Pool.start_request
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+test.test_pooling_base: INFO: [4360044544] Starting request
+pymongo.pool: INFO: [4319531984] [4324855808] on_thread_died
+test.test_pooling_base: INFO: [4320174080] Ending request
+test.test_pooling_base: INFO: [4326952960] Ending request
+test.test_pooling_base: INFO: [4320710656] Done
+test.test_pooling_base: INFO: [4319568208] [4360581120] Thread starting
+pymongo.pool: INFO: [4319555408] Pool.start_request
+pymongo.pool: INFO: [4319554256] Pool._set_request_state Not yet watching thread
+pymongo.pool: INFO: [4319556752] Pool.start_request
+pymongo.pool: INFO: [4319531984] on_thread_died pool active
+test.test_pooling_base: INFO: [4320174080] Done
+test.test_pooling_base: INFO: [4326952960] Done
+test.test_pooling_base: INFO: [4358434816] Finding one
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+test.test_pooling_base: INFO: [4319531152] [4320710656] Thread ending
+test.test_pooling_base: INFO: [4360581120] Starting request
+pymongo.pool: INFO: [4319555408] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4358971392] Finding one
+pymongo.pool: INFO: [4319556752] Pool._set_request_state Not yet watching thread
+pymongo.pool: INFO: [4319531984] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+test.test_pooling_base: INFO: [4319521168] [4320174080] Thread ending
+test.test_pooling_base: INFO: [4319534544] [4326952960] Thread ending
+test.test_pooling_base: INFO: [4319569424] [4361117696] Thread starting
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.pool: INFO: [4319568208] Pool.start_request
+test.test_pooling_base: INFO: [4359507968] Finding one
+test.test_pooling_base: INFO: [4319580496] [4361654272] Thread starting
+test.test_pooling_base: INFO: [4360044544] Finding one
+pymongo.pool: INFO: [4319531152] [4320710656] on_thread_died
+pymongo.pool: INFO: [4319531984] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+test.test_pooling_base: INFO: [4361117696] Starting request
+test.test_pooling_base: INFO: [4319581968] [4370993152] Thread starting
+pymongo.pool: INFO: [4319521168] [4320174080] on_thread_died
+pymongo.pool: INFO: [4319534544] [4326952960] on_thread_died
+test.test_pooling_base: INFO: [4319582544] [4371529728] Thread starting
+pymongo.pool: INFO: [4319568208] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4361654272] Starting request
+pymongo.pool: INFO: [4319531152] on_thread_died pool active
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+test.test_pooling_base: INFO: [4319558736] [4372066304] Thread starting
+pymongo.pool: INFO: [4319569424] Pool.start_request
+test.test_pooling_base: INFO: [4370993152] Starting request
+pymongo.pool: INFO: [4319521168] on_thread_died pool active
+pymongo.pool: INFO: [4319534544] on_thread_died pool active
+test.test_pooling_base: INFO: [4371529728] Starting request
+test.test_pooling_base: INFO: [4360581120] Finding one
+pymongo.pool: INFO: [4319580496] Pool.start_request
+pymongo.pool: INFO: [4319531152] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+test.test_pooling_base: INFO: [4319581008] [4372602880] Thread starting
+test.test_pooling_base: INFO: [4372066304] Starting request
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.pool: INFO: [4319581968] Pool.start_request
+pymongo.pool: INFO: [4319569424] Pool._set_request_state Not yet watching thread
+pymongo.pool: INFO: [4319521168] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+pymongo.pool: INFO: [4319534544] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b360>) at 4319540176
+pymongo.pool: INFO: [4319582544] Pool.start_request
+pymongo.pool: INFO: [4319580496] Pool._set_request_state Not yet watching thread
+pymongo.pool: INFO: [4319531152] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+test.test_pooling_base: INFO: [4372602880] Starting request
+test.test_pooling_base: INFO: [4319591248] [4373139456] Thread starting
+pymongo.pool: INFO: [4319558736] Pool.start_request
+pymongo.pool: INFO: [4319581968] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4361117696] Finding one
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.pool: INFO: [4319521168] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+test.test_pooling_base: INFO: [4319596944] [4373676032] Thread starting
+pymongo.pool: INFO: [4319534544] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b360>) at 4319540176
+pymongo.pool: INFO: [4319582544] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4361654272] Finding one
+test.test_pooling_base: INFO: [4319598096] [4374212608] Thread starting
+test.test_pooling_base: INFO: [4373139456] Starting request
+test.test_pooling_base: INFO: [4370993152] Finding one
+pymongo.pool: INFO: [4319558736] Pool._set_request_state Not yet watching thread
+pymongo.pool: INFO: [4319581008] Pool.start_request
+test.test_pooling_base: INFO: [4319599504] [4374749184] Thread starting
+pymongo.thread_util: INFO: Semaphore.acquire (1)
+test.test_pooling_base: INFO: [4319599760] [4375285760] Thread starting
+test.test_pooling_base: INFO: [4373676032] Starting request
+test.test_pooling_base: INFO: [4371529728] Finding one
+test.test_pooling_base: INFO: [4374212608] Starting request
+pymongo.pool: INFO: [4319591248] Pool.start_request
+test.test_pooling_base: INFO: [4372066304] Finding one
+test.test_pooling_base: INFO: [4319533328] [4324855808] Thread starting
+test.test_pooling_base: INFO: [4374749184] Starting request
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.pool: INFO: [4319581008] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4319606416] [4375822336] Thread starting
+pymongo.pool: INFO: [4319556752] Pool._set_request_state Already watching thread
+test.test_pooling_base: INFO: [4375285760] Starting request
+pymongo.pool: INFO: [4319596944] Pool.start_request
+pymongo.pool: INFO: [4319598096] Pool.start_request
+pymongo.pool: INFO: [4319591248] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4324855808] Starting request
+pymongo.pool: INFO: [4319599504] Pool.start_request
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+test.test_pooling_base: INFO: [4372602880] Finding one
+test.test_pooling_base: INFO: [4319621328] [4376358912] Thread starting
+test.test_pooling_base: INFO: [4375822336] Starting request
+pymongo.pool: INFO: [4319599760] Pool.start_request
+pymongo.pool: INFO: [4319556752] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319596944] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4319622288] [4376895488] Thread starting
+pymongo.pool: INFO: [4319598096] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4373139456] Finding one
+pymongo.pool: INFO: [4319533328] Pool.start_request
+pymongo.pool: INFO: [4319599504] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4319623568] [4377432064] Thread starting
+pymongo.thread_util: INFO: Semaphore.release (0)
+test.test_pooling_base: INFO: [4376358912] Starting request
+pymongo.pool: INFO: [4319606416] Pool.start_request
+pymongo.pool: INFO: [4319599760] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4319624784] [4377968640] Thread starting
+test.test_pooling_base: INFO: [4319629776] [4378505216] Thread starting
+test.test_pooling_base: INFO: [4373676032] Finding one
+test.test_pooling_base: INFO: [4376895488] Starting request
+test.test_pooling_base: INFO: [4360044544] Waiting at the rendezvous
+pymongo.pool: INFO: [4319533328] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4319630800] [4379041792] Thread starting
+test.test_pooling_base: INFO: [4374749184] Finding one
+test.test_pooling_base: INFO: [4374212608] Finding one
+test.test_pooling_base: INFO: [4319632080] [4379578368] Thread starting
+test.test_pooling_base: INFO: [4377432064] Starting request
+pymongo.pool: INFO: [4319621328] Pool.start_request
+pymongo.pool: INFO: [4319606416] Pool._set_request_state Not yet watching thread
+pymongo.thread_util: INFO: Semaphore.release (0)
+test.test_pooling_base: INFO: [4375285760] Finding one
+test.test_pooling_base: INFO: [4377968640] Starting request
+test.test_pooling_base: INFO: [4378505216] Starting request
+pymongo.pool: INFO: [4319622288] Pool.start_request
+test.test_pooling_base: INFO: [4360044544] Ending request
+pymongo.pool: INFO: [4319540816] Pool._set_request_state Already watching thread
+test.test_pooling_base: INFO: [4324855808] Finding one
+test.test_pooling_base: INFO: [4319522000] [4320710656] Thread starting
+test.test_pooling_base: INFO: [4379041792] Starting request
+test.test_pooling_base: INFO: [4319643792] [4381478912] Thread starting
+test.test_pooling_base: INFO: [4379578368] Starting request
+pymongo.pool: INFO: [4319623568] Pool.start_request
+pymongo.pool: INFO: [4319621328] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4375822336] Finding one
+test.test_pooling_base: INFO: [4319645264] [4382015488] Thread starting
+pymongo.pool: INFO: [4319624784] Pool.start_request
+pymongo.thread_util: INFO: Semaphore.acquire (1)
+pymongo.pool: INFO: [4319629776] Pool.start_request
+pymongo.pool: INFO: [4319622288] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4360044544] Done
+pymongo.pool: INFO: [4319540816] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+test.test_pooling_base: INFO: [4320710656] Starting request
+test.test_pooling_base: INFO: [4319126736] [4382552064] Thread starting
+pymongo.pool: INFO: [4319630800] Pool.start_request
+test.test_pooling_base: INFO: [4381478912] Starting request
+pymongo.pool: INFO: [4319632080] Pool.start_request
+pymongo.pool: INFO: [4319623568] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4376358912] Finding one
+test.test_pooling_base: INFO: [4382015488] Starting request
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.pool: INFO: [4319580496] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319624784] Pool._set_request_state Not yet watching thread
+pymongo.pool: INFO: [4319629776] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4376895488] Finding one
+test.test_pooling_base: INFO: [4319556752] [4360044544] Thread ending
+test.test_pooling_base: INFO: [4319521552] [4320174080] Thread starting
+pymongo.pool: INFO: [4319522000] Pool.start_request
+test.test_pooling_base: INFO: [4382552064] Starting request
+pymongo.pool: INFO: [4319630800] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4319138000] [4383088640] Thread starting
+pymongo.pool: INFO: [4319643792] Pool.start_request
+pymongo.pool: INFO: [4319632080] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4377432064] Finding one
+test.test_pooling_base: INFO: [4319139280] [4383625216] Thread starting
+pymongo.pool: INFO: [4319645264] Pool.start_request
+test.test_pooling_base: INFO: [4327489536] Waiting at the rendezvous
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.pool: INFO: [4319580496] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b360>) at 4319540176
+test.test_pooling_base: INFO: [4377968640] Finding one
+test.test_pooling_base: INFO: [4378505216] Finding one
+test.test_pooling_base: INFO: [4320174080] Starting request
+pymongo.pool: INFO: [4319522000] Pool._set_request_state Not yet watching thread
+pymongo.pool: INFO: [4319126736] Pool.start_request
+test.test_pooling_base: INFO: [4379041792] Finding one
+test.test_pooling_base: INFO: [4319141520] [4384161792] Thread starting
+test.test_pooling_base: INFO: [4383088640] Starting request
+test.test_pooling_base: INFO: [4319142608] [4384698368] Thread starting
+pymongo.pool: INFO: [4319643792] Pool._set_request_state Not yet watching thread
+pymongo.pool: INFO: [4319556752] [4360044544] on_thread_died
+test.test_pooling_base: INFO: [4379578368] Finding one
+test.test_pooling_base: INFO: [4383625216] Starting request
+pymongo.pool: INFO: [4319645264] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4327489536] Ending request
+test.test_pooling_base: INFO: [4319143952] [4385234944] Thread starting
+pymongo.thread_util: INFO: Semaphore.acquire (1)
+test.test_pooling_base: INFO: [4319535056] [4326952960] Thread starting
+pymongo.pool: INFO: [4319521552] Pool.start_request
+test.test_pooling_base: INFO: [4319145680] [4385771520] Thread starting
+test.test_pooling_base: INFO: [4320710656] Finding one
+test.test_pooling_base: INFO: [4361654272] Waiting at the rendezvous
+pymongo.pool: INFO: [4319126736] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4384161792] Starting request
+test.test_pooling_base: INFO: [4319155024] [4386308096] Thread starting
+pymongo.pool: INFO: [4319138000] Pool.start_request
+test.test_pooling_base: INFO: [4384698368] Starting request
+test.test_pooling_base: INFO: [4381478912] Finding one
+pymongo.pool: INFO: [4319556752] on_thread_died pool active
+pymongo.pool: INFO: [4319139280] Pool.start_request
+test.test_pooling_base: INFO: [4382015488] Finding one
+test.test_pooling_base: INFO: [4327489536] Done
+test.test_pooling_base: INFO: [4385234944] Starting request
+pymongo.pool: INFO: [4319582544] Pool._set_request_state Already watching thread
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+test.test_pooling_base: INFO: [4319157648] [4386844672] Thread starting
+test.test_pooling_base: INFO: [4326952960] Starting request
+pymongo.pool: INFO: [4319521552] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4385771520] Starting request
+test.test_pooling_base: INFO: [4319604816] [4404547584] Thread starting
+test.test_pooling_base: INFO: [4361654272] Ending request
+test.test_pooling_base: INFO: [4382552064] Finding one
+test.test_pooling_base: INFO: [4319164048] [4405084160] Thread starting
+pymongo.pool: INFO: [4319141520] Pool.start_request
+test.test_pooling_base: INFO: [4386308096] Starting request
+pymongo.pool: INFO: [4319138000] Pool._set_request_state Not yet watching thread
+pymongo.pool: INFO: [4319142608] Pool.start_request
+pymongo.pool: INFO: [4319556752] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319139280] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4319540816] [4327489536] Thread ending
+pymongo.pool: INFO: [4319143952] Pool.start_request
+test.test_pooling_base: INFO: [4319166096] [4405620736] Thread starting
+pymongo.pool: INFO: [4319582544] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+test.test_pooling_base: INFO: [4386844672] Starting request
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.pool: INFO: [4319535056] Pool.start_request
+test.test_pooling_base: INFO: [4320174080] Finding one
+pymongo.pool: INFO: [4319145680] Pool.start_request
+test.test_pooling_base: INFO: [4404547584] Starting request
+test.test_pooling_base: INFO: [4361654272] Done
+test.test_pooling_base: INFO: [4405084160] Starting request
+pymongo.pool: INFO: [4319141520] Pool._set_request_state Not yet watching thread
+pymongo.pool: INFO: [4319155024] Pool.start_request
+test.test_pooling_base: INFO: [4383088640] Finding one
+pymongo.pool: INFO: [4319142608] Pool._set_request_state Not yet watching thread
+pymongo.pool: INFO: [4319556752] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+test.test_pooling_base: INFO: [4383625216] Finding one
+pymongo.pool: INFO: [4319540816] [4327489536] on_thread_died
+pymongo.pool: INFO: [4319143952] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4405620736] Starting request
+pymongo.pool: INFO: [4319157648] Pool.start_request
+pymongo.pool: INFO: [4319535056] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4371529728] Last thread at the rendezvous
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.pool: INFO: [4319145680] Pool._set_request_state Not yet watching thread
+pymongo.pool: INFO: [4319604816] Pool.start_request
+test.test_pooling_base: INFO: [4319580496] [4361654272] Thread ending
+pymongo.pool: INFO: [4319164048] Pool.start_request
+test.test_pooling_base: INFO: [4384161792] Finding one
+pymongo.pool: INFO: [4319155024] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4384698368] Finding one
+pymongo.pool: INFO: [4319540816] on_thread_died pool active
+test.test_pooling_base: INFO: [4385234944] Finding one
+pymongo.pool: INFO: [4319166096] Pool.start_request
+pymongo.pool: INFO: [4319157648] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4326952960] Finding one
+test.test_pooling_base: INFO: [4371529728] Ending request
+test.test_pooling_base: INFO: [4385771520] Finding one
+pymongo.pool: INFO: [4319604816] Pool._set_request_state Not yet watching thread
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.pool: INFO: [4319580496] [4361654272] on_thread_died
+pymongo.pool: INFO: [4319164048] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4386308096] Finding one
+pymongo.pool: INFO: [4319540816] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319166096] Pool._set_request_state Not yet watching thread
+test.test_pooling_base: INFO: [4386844672] Finding one
+test.test_pooling_base: INFO: [4371529728] Done
+test.test_pooling_base: INFO: [4404547584] Finding one
+pymongo.pool: INFO: [4319580496] on_thread_died pool active
+test.test_pooling_base: INFO: [4405084160] Finding one
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.pool: INFO: [4319540816] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+test.test_pooling_base: INFO: [4405620736] Finding one
+test.test_pooling_base: INFO: [4319582544] [4371529728] Thread ending
+pymongo.pool: INFO: [4319580496] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b360>) at 4319540176
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.pool: INFO: [4319582544] [4371529728] on_thread_died
+pymongo.pool: INFO: [4319580496] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b360>) at 4319540176
+pymongo.pool: INFO: [4319582544] on_thread_died pool active
+pymongo.pool: INFO: [4319582544] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+pymongo.pool: INFO: [4319582544] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.thread_util: INFO: Semaphore.acquire (1)
+pymongo.pool: INFO: [4319139280] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319139280] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+test.test_pooling_base: INFO: [4383625216] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4383625216] Ending request
+test.test_pooling_base: INFO: [4383625216] Done
+test.test_pooling_base: INFO: [4319139280] [4383625216] Thread ending
+pymongo.thread_util: INFO: Semaphore.acquire (0)
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.thread_util: INFO: Semaphore.acquire (1)
+pymongo.pool: INFO: [4319139280] [4383625216] on_thread_died
+pymongo.pool: INFO: [4319139280] on_thread_died pool active
+pymongo.pool: INFO: [4319139280] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319139280] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.thread_util: INFO: Semaphore.release (1)
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.pool: INFO: [4319166096] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319166096] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319552848] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319554256] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319554256] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b360>) at 4319540176
+pymongo.pool: INFO: [4319568208] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319552848] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+test.test_pooling_base: INFO: [4358971392] Waiting at the rendezvous
+pymongo.pool: INFO: [4319568208] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+test.test_pooling_base: INFO: [4405620736] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4358971392] Ending request
+test.test_pooling_base: INFO: [4405620736] Ending request
+test.test_pooling_base: INFO: [4358971392] Done
+test.test_pooling_base: INFO: [4405620736] Done
+test.test_pooling_base: INFO: [4358434816] Last thread at the rendezvous
+test.test_pooling_base: INFO: [4319554256] [4358971392] Thread ending
+test.test_pooling_base: INFO: [4319166096] [4405620736] Thread ending
+pymongo.pool: INFO: [4319554256] [4358971392] on_thread_died
+pymongo.pool: INFO: [4319554256] on_thread_died pool active
+pymongo.pool: INFO: [4319554256] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b360>) at 4319540176
+pymongo.pool: INFO: [4319554256] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b360>) at 4319540176
+test.test_pooling_base: INFO: [4358434816] Ending request
+test.test_pooling_base: INFO: [4358434816] Done
+test.test_pooling_base: INFO: [4360581120] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4319552848] [4358434816] Thread ending
+pymongo.thread_util: INFO: Semaphore.release (0)
+test.test_pooling_base: INFO: [4360581120] Ending request
+pymongo.pool: INFO: [4319166096] [4405620736] on_thread_died
+test.test_pooling_base: INFO: [4360581120] Done
+pymongo.pool: INFO: [4319166096] on_thread_died pool active
+pymongo.pool: INFO: [4319552848] [4358434816] on_thread_died
+pymongo.pool: INFO: [4319552848] on_thread_died pool active
+pymongo.pool: INFO: [4319552848] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319166096] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319581968] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319552848] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319166096] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319581968] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b360>) at 4319540176
+pymongo.thread_util: INFO: Semaphore.release (0)
+test.test_pooling_base: INFO: [4319568208] [4360581120] Thread ending
+pymongo.thread_util: INFO: Semaphore.release (1)
+pymongo.pool: INFO: [4319558736] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319558736] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+test.test_pooling_base: INFO: [4370993152] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4370993152] Ending request
+test.test_pooling_base: INFO: [4370993152] Done
+test.test_pooling_base: INFO: [4319581968] [4370993152] Thread ending
+pymongo.pool: INFO: [4319581008] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319581008] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+test.test_pooling_base: INFO: [4372066304] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4372066304] Ending request
+test.test_pooling_base: INFO: [4372066304] Done
+test.test_pooling_base: INFO: [4319558736] [4372066304] Thread ending
+pymongo.pool: INFO: [4319568208] [4360581120] on_thread_died
+pymongo.pool: INFO: [4319568208] on_thread_died pool active
+pymongo.pool: INFO: [4319568208] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+pymongo.pool: INFO: [4319568208] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.pool: INFO: [4319558736] [4372066304] on_thread_died
+pymongo.pool: INFO: [4319558736] on_thread_died pool active
+pymongo.pool: INFO: [4319558736] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319558736] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.thread_util: INFO: Semaphore.release (1)
+pymongo.pool: INFO: [4319596944] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319596944] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+pymongo.pool: INFO: [4319591248] Pool._set_request_state Already watching thread
+test.test_pooling_base: INFO: [4372602880] Last thread at the rendezvous
+test.test_pooling_base: INFO: [4372602880] Ending request
+test.test_pooling_base: INFO: [4372602880] Done
+test.test_pooling_base: INFO: [4373676032] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4319581008] [4372602880] Thread ending
+pymongo.pool: INFO: [4319591248] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+test.test_pooling_base: INFO: [4373676032] Ending request
+pymongo.pool: INFO: [4319581008] [4372602880] on_thread_died
+test.test_pooling_base: INFO: [4373676032] Done
+pymongo.pool: INFO: [4319581008] on_thread_died pool active
+test.test_pooling_base: INFO: [4319596944] [4373676032] Thread ending
+pymongo.pool: INFO: [4319581008] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319581008] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.pool: INFO: [4319596944] [4373676032] on_thread_died
+pymongo.pool: INFO: [4319596944] on_thread_died pool active
+pymongo.pool: INFO: [4319596944] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+pymongo.pool: INFO: [4319596944] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+pymongo.thread_util: INFO: Semaphore.release (1)
+test.test_pooling_base: INFO: [4373139456] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4373139456] Ending request
+test.test_pooling_base: INFO: [4373139456] Done
+test.test_pooling_base: INFO: [4319591248] [4373139456] Thread ending
+pymongo.pool: INFO: [4319599504] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319599504] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319533392] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319591248] [4373139456] on_thread_died
+test.test_pooling_base: INFO: [4374749184] Waiting at the rendezvous
+pymongo.pool: INFO: [4319533392] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+pymongo.pool: INFO: [4319591248] on_thread_died pool active
+test.test_pooling_base: INFO: [4374749184] Ending request
+pymongo.pool: INFO: [4319591248] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+test.test_pooling_base: INFO: [4374749184] Done
+pymongo.pool: INFO: [4319591248] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+test.test_pooling_base: INFO: [4319599504] [4374749184] Thread ending
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.pool: INFO: [4319599504] [4374749184] on_thread_died
+pymongo.pool: INFO: [4319599504] on_thread_died pool active
+pymongo.pool: INFO: [4319599504] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319599504] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.pool: INFO: [4319598096] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319598096] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319599760] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319599760] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+test.test_pooling_base: INFO: [4328026112] Last thread at the rendezvous
+test.test_pooling_base: INFO: [4328026112] Ending request
+test.test_pooling_base: INFO: [4328026112] Done
+test.test_pooling_base: INFO: [4374212608] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4319533392] [4328026112] Thread ending
+test.test_pooling_base: INFO: [4374212608] Ending request
+test.test_pooling_base: INFO: [4374212608] Done
+test.test_pooling_base: INFO: [4319598096] [4374212608] Thread ending
+test.test_pooling_base: INFO: [4375285760] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4375285760] Ending request
+test.test_pooling_base: INFO: [4375285760] Done
+test.test_pooling_base: INFO: [4319599760] [4375285760] Thread ending
+pymongo.pool: INFO: [4319533392] [4328026112] on_thread_died
+pymongo.pool: INFO: [4319533392] on_thread_died pool active
+pymongo.pool: INFO: [4319533392] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+pymongo.pool: INFO: [4319533392] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.pool: INFO: [4319598096] [4374212608] on_thread_died
+pymongo.pool: INFO: [4319598096] on_thread_died pool active
+pymongo.pool: INFO: [4319598096] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319598096] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.thread_util: INFO: Semaphore.release (1)
+pymongo.pool: INFO: [4319599760] [4375285760] on_thread_died
+pymongo.pool: INFO: [4319599760] on_thread_died pool active
+pymongo.pool: INFO: [4319599760] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319599760] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.thread_util: INFO: Semaphore.release (1)
+pymongo.pool: INFO: [4319533328] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319606416] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319551952] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319533328] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+pymongo.pool: INFO: [4319606416] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319551952] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+test.test_pooling_base: INFO: [4324855808] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4324855808] Ending request
+test.test_pooling_base: INFO: [4324855808] Done
+test.test_pooling_base: INFO: [4319533328] [4324855808] Thread ending
+pymongo.pool: INFO: [4319533328] [4324855808] on_thread_died
+pymongo.pool: INFO: [4319533328] on_thread_died pool active
+pymongo.pool: INFO: [4319533328] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+pymongo.pool: INFO: [4319533328] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+pymongo.thread_util: INFO: Semaphore.release (0)
+test.test_pooling_base: INFO: [4357898240] Last thread at the rendezvous
+pymongo.pool: INFO: [4319621328] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319621328] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+test.test_pooling_base: INFO: [4357898240] Ending request
+test.test_pooling_base: INFO: [4375822336] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4375822336] Ending request
+test.test_pooling_base: INFO: [4357898240] Done
+test.test_pooling_base: INFO: [4375822336] Done
+test.test_pooling_base: INFO: [4319551952] [4357898240] Thread ending
+test.test_pooling_base: INFO: [4319606416] [4375822336] Thread ending
+pymongo.pool: INFO: [4319551952] [4357898240] on_thread_died
+test.test_pooling_base: INFO: [4376358912] Waiting at the rendezvous
+pymongo.pool: INFO: [4319551952] on_thread_died pool active
+test.test_pooling_base: INFO: [4376358912] Ending request
+pymongo.pool: INFO: [4319606416] [4375822336] on_thread_died
+pymongo.pool: INFO: [4319551952] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+test.test_pooling_base: INFO: [4376358912] Done
+pymongo.pool: INFO: [4319606416] on_thread_died pool active
+pymongo.pool: INFO: [4319551952] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+test.test_pooling_base: INFO: [4319621328] [4376358912] Thread ending
+pymongo.pool: INFO: [4319606416] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.pool: INFO: [4319606416] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.thread_util: INFO: Semaphore.release (1)
+pymongo.pool: INFO: [4319621328] [4376358912] on_thread_died
+pymongo.pool: INFO: [4319621328] on_thread_died pool active
+pymongo.pool: INFO: [4319621328] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+pymongo.pool: INFO: [4319621328] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+pymongo.pool: INFO: [4319623568] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319623568] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b0c0>) at 4319498512
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.pool: INFO: [4319622288] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319622288] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+test.test_pooling_base: INFO: [4377432064] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4377432064] Ending request
+test.test_pooling_base: INFO: [4377432064] Done
+test.test_pooling_base: INFO: [4319623568] [4377432064] Thread ending
+test.test_pooling_base: INFO: [4376895488] Last thread at the rendezvous
+pymongo.pool: INFO: [4319539728] Pool._set_request_state Already watching thread
+test.test_pooling_base: INFO: [4376895488] Ending request
+pymongo.pool: INFO: [4319539728] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+test.test_pooling_base: INFO: [4376895488] Done
+test.test_pooling_base: INFO: [4319622288] [4376895488] Thread ending
+test.test_pooling_base: INFO: [4357361664] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4357361664] Ending request
+test.test_pooling_base: INFO: [4357361664] Done
+test.test_pooling_base: INFO: [4319539728] [4357361664] Thread ending
+pymongo.pool: INFO: [4319622288] [4376895488] on_thread_died
+pymongo.pool: INFO: [4319622288] on_thread_died pool active
+pymongo.pool: INFO: [4319622288] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319622288] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.pool: INFO: [4319539728] [4357361664] on_thread_died
+pymongo.pool: INFO: [4319539728] on_thread_died pool active
+pymongo.pool: INFO: [4319539728] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319539728] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.pool: INFO: [4319624784] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319624784] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319629776] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319629776] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+test.test_pooling_base: INFO: [4377968640] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4377968640] Ending request
+test.test_pooling_base: INFO: [4377968640] Done
+test.test_pooling_base: INFO: [4319624784] [4377968640] Thread ending
+pymongo.pool: INFO: [4319624784] [4377968640] on_thread_died
+pymongo.pool: INFO: [4319624784] on_thread_died pool active
+pymongo.pool: INFO: [4319624784] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319624784] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.thread_util: INFO: Semaphore.release (0)
+test.test_pooling_base: INFO: [4378505216] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4378505216] Ending request
+test.test_pooling_base: INFO: [4378505216] Done
+test.test_pooling_base: INFO: [4319629776] [4378505216] Thread ending
+pymongo.pool: INFO: [4319629776] [4378505216] on_thread_died
+pymongo.pool: INFO: [4319629776] on_thread_died pool active
+pymongo.pool: INFO: [4319629776] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319629776] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.pool: INFO: [4319630800] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319630800] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319632080] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319632080] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+test.test_pooling_base: INFO: [4379041792] Last thread at the rendezvous
+test.test_pooling_base: INFO: [4379041792] Ending request
+test.test_pooling_base: INFO: [4379041792] Done
+test.test_pooling_base: INFO: [4319630800] [4379041792] Thread ending
+pymongo.pool: INFO: [4319630800] [4379041792] on_thread_died
+pymongo.pool: INFO: [4319630800] on_thread_died pool active
+pymongo.pool: INFO: [4319630800] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319630800] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.thread_util: INFO: Semaphore.release (0)
+test.test_pooling_base: INFO: [4379578368] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4379578368] Ending request
+test.test_pooling_base: INFO: [4379578368] Done
+test.test_pooling_base: INFO: [4319632080] [4379578368] Thread ending
+pymongo.pool: INFO: [4319522000] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319522000] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319632080] [4379578368] on_thread_died
+pymongo.pool: INFO: [4319632080] on_thread_died pool active
+pymongo.pool: INFO: [4319632080] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319632080] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.thread_util: INFO: Semaphore.release (0)
+test.test_pooling_base: INFO: [4320710656] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4320710656] Ending request
+test.test_pooling_base: INFO: [4320710656] Done
+test.test_pooling_base: INFO: [4319522000] [4320710656] Thread ending
+pymongo.pool: INFO: [4319522000] [4320710656] on_thread_died
+pymongo.pool: INFO: [4319522000] on_thread_died pool active
+pymongo.pool: INFO: [4319522000] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319643792] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319522000] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319643792] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.pool: INFO: [4319645264] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319645264] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+test.test_pooling_base: INFO: [4381478912] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4381478912] Ending request
+test.test_pooling_base: INFO: [4381478912] Done
+test.test_pooling_base: INFO: [4319643792] [4381478912] Thread ending
+pymongo.pool: INFO: [4319643792] [4381478912] on_thread_died
+pymongo.pool: INFO: [4319643792] on_thread_died pool active
+pymongo.pool: INFO: [4319643792] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319643792] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.thread_util: INFO: Semaphore.release (0)
+test.test_pooling_base: INFO: [4382015488] Last thread at the rendezvous
+pymongo.pool: INFO: [4319126736] Pool._set_request_state Already watching thread
+test.test_pooling_base: INFO: [4382015488] Ending request
+pymongo.pool: INFO: [4319126736] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+test.test_pooling_base: INFO: [4382015488] Done
+test.test_pooling_base: INFO: [4319645264] [4382015488] Thread ending
+pymongo.pool: INFO: [4319645264] [4382015488] on_thread_died
+pymongo.pool: INFO: [4319645264] on_thread_died pool active
+pymongo.pool: INFO: [4319645264] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319645264] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.thread_util: INFO: Semaphore.release (0)
+test.test_pooling_base: INFO: [4382552064] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4382552064] Ending request
+test.test_pooling_base: INFO: [4382552064] Done
+test.test_pooling_base: INFO: [4319126736] [4382552064] Thread ending
+pymongo.pool: INFO: [4319126736] [4382552064] on_thread_died
+pymongo.pool: INFO: [4319126736] on_thread_died pool active
+pymongo.pool: INFO: [4319126736] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319126736] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.pool: INFO: [4319521552] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319521552] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319138000] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319138000] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+test.test_pooling_base: INFO: [4320174080] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4320174080] Ending request
+test.test_pooling_base: INFO: [4320174080] Done
+test.test_pooling_base: INFO: [4319521552] [4320174080] Thread ending
+pymongo.pool: INFO: [4319521552] [4320174080] on_thread_died
+pymongo.pool: INFO: [4319521552] on_thread_died pool active
+pymongo.pool: INFO: [4319521552] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319521552] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.thread_util: INFO: Semaphore.release (0)
+test.test_pooling_base: INFO: [4383088640] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4383088640] Ending request
+test.test_pooling_base: INFO: [4383088640] Done
+test.test_pooling_base: INFO: [4319138000] [4383088640] Thread ending
+pymongo.pool: INFO: [4319141520] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319141520] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319138000] [4383088640] on_thread_died
+pymongo.pool: INFO: [4319138000] on_thread_died pool active
+pymongo.pool: INFO: [4319138000] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319138000] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.thread_util: INFO: Semaphore.release (0)
+test.test_pooling_base: INFO: [4384161792] Last thread at the rendezvous
+test.test_pooling_base: INFO: [4384161792] Ending request
+test.test_pooling_base: INFO: [4384161792] Done
+test.test_pooling_base: INFO: [4319141520] [4384161792] Thread ending
+pymongo.pool: INFO: [4319142608] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319142608] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319141520] [4384161792] on_thread_died
+pymongo.pool: INFO: [4319141520] on_thread_died pool active
+pymongo.pool: INFO: [4319141520] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319141520] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.pool: INFO: [4319143952] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319143952] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+test.test_pooling_base: INFO: [4384698368] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4384698368] Ending request
+test.test_pooling_base: INFO: [4384698368] Done
+test.test_pooling_base: INFO: [4319142608] [4384698368] Thread ending
+pymongo.pool: INFO: [4319142608] [4384698368] on_thread_died
+pymongo.pool: INFO: [4319142608] on_thread_died pool active
+pymongo.pool: INFO: [4319142608] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319142608] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.thread_util: INFO: Semaphore.release (0)
+test.test_pooling_base: INFO: [4385234944] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4385234944] Ending request
+test.test_pooling_base: INFO: [4385234944] Done
+test.test_pooling_base: INFO: [4319143952] [4385234944] Thread ending
+pymongo.pool: INFO: [4319143952] [4385234944] on_thread_died
+pymongo.pool: INFO: [4319143952] on_thread_died pool active
+pymongo.pool: INFO: [4319143952] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319143952] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.pool: INFO: [4319535056] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319535056] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319145680] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319145680] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+test.test_pooling_base: INFO: [4326952960] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4326952960] Ending request
+test.test_pooling_base: INFO: [4326952960] Done
+test.test_pooling_base: INFO: [4319535056] [4326952960] Thread ending
+pymongo.pool: INFO: [4319535056] [4326952960] on_thread_died
+pymongo.pool: INFO: [4319535056] on_thread_died pool active
+pymongo.pool: INFO: [4319535056] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319535056] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.thread_util: INFO: Semaphore.release (0)
+test.test_pooling_base: INFO: [4385771520] Last thread at the rendezvous
+test.test_pooling_base: INFO: [4385771520] Ending request
+test.test_pooling_base: INFO: [4385771520] Done
+pymongo.pool: INFO: [4319155024] Pool._set_request_state Already watching thread
+test.test_pooling_base: INFO: [4319145680] [4385771520] Thread ending
+pymongo.pool: INFO: [4319155024] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319145680] [4385771520] on_thread_died
+pymongo.pool: INFO: [4319145680] on_thread_died pool active
+pymongo.pool: INFO: [4319145680] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319145680] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.pool: INFO: [4319157648] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319157648] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+test.test_pooling_base: INFO: [4386308096] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4386308096] Ending request
+test.test_pooling_base: INFO: [4386308096] Done
+test.test_pooling_base: INFO: [4319155024] [4386308096] Thread ending
+pymongo.pool: INFO: [4319155024] [4386308096] on_thread_died
+pymongo.pool: INFO: [4319155024] on_thread_died pool active
+pymongo.pool: INFO: [4319155024] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319155024] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.thread_util: INFO: Semaphore.release (0)
+test.test_pooling_base: INFO: [4386844672] Waiting at the rendezvous
+pymongo.pool: INFO: [4319604816] Pool._set_request_state Already watching thread
+test.test_pooling_base: INFO: [4386844672] Ending request
+pymongo.pool: INFO: [4319604816] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+test.test_pooling_base: INFO: [4386844672] Done
+test.test_pooling_base: INFO: [4319157648] [4386844672] Thread ending
+pymongo.pool: INFO: [4319157648] [4386844672] on_thread_died
+pymongo.pool: INFO: [4319157648] on_thread_died pool active
+pymongo.pool: INFO: [4319157648] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319157648] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.thread_util: INFO: Semaphore.release (0)
+test.test_pooling_base: INFO: [4404547584] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4404547584] Ending request
+test.test_pooling_base: INFO: [4404547584] Done
+test.test_pooling_base: INFO: [4319604816] [4404547584] Thread ending
+pymongo.pool: INFO: [4319164048] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319164048] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319604816] [4404547584] on_thread_died
+pymongo.pool: INFO: [4319604816] on_thread_died pool active
+pymongo.pool: INFO: [4319604816] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319604816] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.thread_util: INFO: Semaphore.release (0)
+test.test_pooling_base: INFO: [4405084160] Last thread at the rendezvous
+test.test_pooling_base: INFO: [4405084160] Ending request
+test.test_pooling_base: INFO: [4405084160] Done
+test.test_pooling_base: INFO: [4319164048] [4405084160] Thread ending
+pymongo.pool: INFO: [4319555408] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319164048] [4405084160] on_thread_died
+pymongo.pool: INFO: [4319555408] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319164048] on_thread_died pool active
+pymongo.pool: INFO: [4319164048] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319164048] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.thread_util: INFO: Semaphore.release (0)
+pymongo.pool: INFO: [4319569424] Pool._set_request_state Already watching thread
+pymongo.pool: INFO: [4319569424] Pool.get_socket got SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+test.test_pooling_base: INFO: [4359507968] Waiting at the rendezvous
+test.test_pooling_base: INFO: [4359507968] Ending request
+test.test_pooling_base: INFO: [4359507968] Done
+test.test_pooling_base: INFO: [4319555408] [4359507968] Thread ending
+pymongo.pool: INFO: [4319555408] [4359507968] on_thread_died
+pymongo.pool: INFO: [4319555408] on_thread_died pool active
+pymongo.pool: INFO: [4319555408] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.pool: INFO: [4319555408] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b210>) at 4319534288
+pymongo.thread_util: INFO: Semaphore.release (0)
+test.test_pooling_base: INFO: [4361117696] Last thread at the rendezvous
+test.test_pooling_base: INFO: [4361117696] Ending request
+test.test_pooling_base: INFO: [4361117696] Done
+test.test_pooling_base: INFO: [4319569424] [4361117696] Thread ending
+pymongo.pool: INFO: [4319569424] [4361117696] on_thread_died
+pymongo.pool: INFO: [4319569424] on_thread_died pool active
+pymongo.pool: INFO: [4319569424] on_thread_died returning request_sock SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.pool: INFO: [4319569424] Pool._return_socket returning SocketInfo(<socket._socketobject object at 0x10175b2f0>) at 4319539920
+pymongo.thread_util: INFO: Semaphore.release (1)
+--------------------- >> end captured logging << ---------------------
+
+----------------------------------------------------------------------
+Ran 1 test in 6.841s
+
+FAILED (failures=1)
