@@ -724,9 +724,9 @@ class _TestMaxPoolSize(_TestPoolingBase):
         # recent Gevent development.
         nthreads = 10
 
-        from guppy import hpy
-        hp = hpy()
-        hp.setrelheap()
+#        from guppy import hpy
+#        hp = hpy()
+#        hp.setrelheap()
         
         rendevous = CreateAndReleaseSocket.Rendezvous(
             nthreads, self.use_greenlets)
@@ -793,14 +793,14 @@ class _TestMaxPoolSize(_TestPoolingBase):
                     print ref()
                     print gc.garbage
                     print gc.get_referrers(ref())
-                    heap = hp.heap()
-                    import ipdb; ipdb.set_trace()
-                    objgraph.show_backrefs([ref()], filename='backref-%r.png' % (tid,), refcounts=True)
-                    objgraph.show_chain(
-                        objgraph.find_backref_chain(
-                            ref(),
-                            lambda o: inspect.ismodule(o) and o is not gc and o.__name__ != 'gc' and o != gc),
-                        filename='backref-chain-%r.png' % (tid,), refcounts=True, backrefs=False)
+#                    heap = hp.heap()
+#                    import ipdb; ipdb.set_trace()
+#                    objgraph.show_backrefs([ref()], filename='backref-%r.png' % (tid,), refcounts=True)
+#                    objgraph.show_chain(
+#                        objgraph.find_backref_chain(
+#                            ref(),
+#                            lambda o: inspect.ismodule(o) and o is not gc and o.__name__ != 'gc' and o != gc),
+#                        filename='backref-chain-%r.png' % (tid,), refcounts=True, backrefs=False)
 
 		
             if start_request:
