@@ -746,8 +746,6 @@ class _TestMaxPoolSize(_TestPoolingBase):
         for t in threads:
             self.assertTrue(t.passed)
 
-        time.sleep(2)
-
         # Socket-reclamation doesn't work in Jython
         if not sys.platform.startswith('java'):
             cx_pool = c._MongoClient__pool

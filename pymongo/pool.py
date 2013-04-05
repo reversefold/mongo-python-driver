@@ -64,7 +64,7 @@ def _closed(sock):
 class SocketInfo(object):
     """Store a socket with some metadata
     """
-    def __init__(self, sock, pool_id, host=None):
+    def __init__(self, sock, pool_id, host=None):#, pool=None):
         self.sock = sock
         self.host = host
         self.authset = set()
@@ -75,6 +75,7 @@ class SocketInfo(object):
         # The pool's pool_id changes with each reset() so we can close sockets
         # created before the last reset.
         self.pool_id = pool_id
+#        self.pool = pool
 
     def close(self):
         self.closed = True
@@ -101,6 +102,17 @@ class SocketInfo(object):
             self.closed and " CLOSED" or "",
             id(self)
         )
+
+#    def __del__(self):
+#        log.info('SocketInfo.__del__ %r', self)
+#        if self.closed:
+#            log.info('SocketInfo.__del__ already closed %r', self)
+#            return
+#        if self in self.pool.sockets:
+#            log.info('SocketInfo.__del__ already returned %r', self)
+#            return
+#        log.info('SocketInfo.__del__ calling maybe_return_socket %r', self)
+#        self.pool.maybe_return_socket(self)
 
 
 # Do *not* explicitly inherit from object or Jython won't call __del__
@@ -207,6 +219,8 @@ class Pool:
                     thread_util.MaxWaitersBoundedSemaphoreThread(
                         self.max_size, max_waiters))
 
+        self._poolrefs = {}
+
     def reset(self):
         # Ignore this race condition -- if many threads are resetting at once,
         # the pool_id will definitely change, which is all we care about.
@@ -303,7 +317,7 @@ class Pool:
                                         "not be configured with SSL support.")
 
         sock.settimeout(self.net_timeout)
-        return SocketInfo(sock, self.pool_id, hostname)
+        return SocketInfo(sock, self.pool_id, hostname)#, self)
 
     def get_socket(self, pair=None, force=False):
         """Get a socket from the pool.
@@ -421,6 +435,15 @@ class Pool:
     def maybe_return_socket(self, sock_info):
         """Return the socket to the pool unless it's the request socket.
         """
+#        # Catch the case where a socket has already been returned to the pool
+#        # when SocketInfo.__del__ is called
+#        try:
+#            self.lock.acquire()
+#            if sock_info in self.sockets:
+#                return
+#        finally:
+#            self.lock.release()
+
         if self.pid != os.getpid():
             if not sock_info.forced:
                 self._socket_semaphore.release()
@@ -523,6 +546,8 @@ class Pool:
                 # thread locals in this function, while PyThreadState_Clear()
                 # is in progress can cause leaks, see PYTHON-353.
                 poolref = weakref.ref(self)
+                self._poolrefs.setdefault(ident.get(), []).append(poolref)
+
                 def on_thread_died(ref):
                     try:
                         log.info('[%r] [%r] on_thread_died', tid, tident)
