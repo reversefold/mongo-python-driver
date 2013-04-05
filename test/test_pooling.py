@@ -13,8 +13,10 @@
 # limitations under the License.
 
 """Test built in connection-pooling with threads."""
-
 import sys
+import logging
+logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+
 import thread
 import time
 import unittest
@@ -177,4 +179,10 @@ class TestWaitQueueMultipleThreads(_TestWaitQueueMultiple, unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    class tmp(TestMaxPoolSizeThreads):
+        def __init__(self):
+            pass
+    ut = tmp()
+    ut.setUp()
+    ut.test_max_pool_size_with_leaked_request()
+    #unittest.main()

@@ -16,6 +16,8 @@
 """
 
 import gc
+import inspect
+import objgraph
 import random
 import socket
 import sys
@@ -78,28 +80,29 @@ class MongoThread(object):
         self.thread.start()
 
     def join(self):
-        start = time.time()
-        while time.time() - start < 30:
-            self.thread.join(1)
-
-            # Access the thread local from the main thread to trigger the
-            # ThreadVigil's delete callback, returning the request socket to
-            # the pool.
-            # In Python 2.6 and lesser, a dead thread's locals are deleted
-            # and those locals' weakref callbacks are fired only when another
-            # thread accesses the locals and finds the thread state is stale.
-            # This is more or less a bug in Python <= 2.6. Accessing the thread
-            # local from the main thread is a necessary part of this test, and
-            # realistic: in a multithreaded web server a new thread will access
-            # Pool._ident._local soon after an old thread has died.
-            self.client._MongoClient__pool._ident.get()
-
-            if self.use_greenlets:
-                if self.thread.dead:
-                    break
-            else:
-                if not self.thread.isAlive():
-                    break
+        self.thread.join(30)
+#        start = time.time()
+#        while time.time() - start < 30:
+#            self.thread.join(1)
+#
+#            # Access the thread local from the main thread to trigger the
+#            # ThreadVigil's delete callback, returning the request socket to
+#            # the pool.
+#            # In Python 2.6 and lesser, a dead thread's locals are deleted
+#            # and those locals' weakref callbacks are fired only when another
+#            # thread accesses the locals and finds the thread state is stale.
+#            # This is more or less a bug in Python <= 2.6. Accessing the thread
+#            # local from the main thread is a necessary part of this test, and
+#            # realistic: in a multithreaded web server a new thread will access
+#            # Pool._ident._local soon after an old thread has died.
+#            self.client._MongoClient__pool._ident.get()
+#
+#            if self.use_greenlets:
+#                if self.thread.dead:
+#                    break
+#            else:
+#                if not self.thread.isAlive():
+#                    break
 
         if self.use_greenlets:
             assert self.thread.dead, "Greenlet timeout"
@@ -719,8 +722,12 @@ class _TestMaxPoolSize(_TestPoolingBase):
         # Gevent 0.13.6 bug on Mac, Greenlet.join() hangs if more than
         # about 35 Greenlets share a MongoClient. Apparently fixed in
         # recent Gevent development.
-        nthreads = 50
+        nthreads = 10
 
+        from guppy import hpy
+        hp = hpy()
+        hp.setrelheap()
+        
         rendevous = CreateAndReleaseSocket.Rendezvous(
             nthreads, self.use_greenlets)
 
@@ -769,8 +776,35 @@ class _TestMaxPoolSize(_TestPoolingBase):
             # local from the main thread is a necessary part of this test, and
             # realistic: in a multithreaded web server a new thread will access
             # Pool._ident._local soon after an old thread has died.
-            cx_pool._ident.get()
+            for _ in xrange(600):
+                cx_pool._ident.get()
+                cx_pool._ident._local.__dict__.get('a', None)
+                break
+                gc.collect()
+                if pool_size == len(cx_pool.sockets):
+                    break
+                log.info('%r %r', pool_size, len(cx_pool.sockets))
+                time.sleep(1)
 
+            print cx_pool._ident._refs
+            for tid, ref in cx_pool._ident._refs.iteritems():
+                print '%r: %r - %r' % (tid, ref, ref())
+                if ref():
+                    gc.collect()
+                if ref():
+                    print ref()
+                    print gc.garbage
+                    print gc.get_referrers(ref())
+                    heap = hp.heap()
+                    import ipdb; ipdb.set_trace()
+                    objgraph.show_backrefs([ref()], filename='backref-%r.png' % (tid,), refcounts=True)
+                    objgraph.show_chain(
+                        objgraph.find_backref_chain(
+                            ref(),
+                            lambda o: inspect.ismodule(o) and o is not gc and o.__name__ != 'gc' and o != gc),
+                        filename='backref-chain-%r.png' % (tid,), refcounts=True, backrefs=False)
+
+		
             if start_request:
                 self.assertEqual(pool_size, len(cx_pool.sockets))
             else:
@@ -794,6 +828,7 @@ class _TestMaxPoolSize(_TestPoolingBase):
         self._test_max_pool_size(20, 1)
 
     def test_max_pool_size_with_leaked_request(self):
+#        gc.set_debug(gc.DEBUG_STATS|gc.DEBUG_LEAK)
         # Call start_request() but not end_request() -- when threads die, they
         # should return their request sockets to the pool.
         self._test_max_pool_size(1, 0)

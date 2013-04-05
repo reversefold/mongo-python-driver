@@ -66,9 +66,11 @@ class ThreadIdent(Ident):
     # We watch for thread-death using a weakref callback to a thread local.
     # Weakrefs are permitted on subclasses of object but not object() itself.
     class ThreadVigil(object):
-        def __init__(self):
+#        def __init__(self):
 #            log.info('[%r] ThreadIdent.ThreadVigil.__init__', id(self))
             pass
+#        def __del__(self):
+#            log.info('[%r] ThreadIdent.ThreadVigil.__del__', id(self))
 
     def get(self):
         if not hasattr(self._local, 'vigil'):
@@ -81,7 +83,7 @@ class ThreadIdent(Ident):
 
     def watch(self, callback):
         tid = self.get()
-#        log.info('[%r] ThreadIdent.watch', tid)
+        log.info('[%r] ThreadIdent.watch', tid)
         self._refs[tid] = weakref.ref(self._local.vigil, callback)
 
     def watching(self):
