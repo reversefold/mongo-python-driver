@@ -17,6 +17,7 @@
 
 import gc
 import random
+import objgraph
 import socket
 import sys
 import thread
@@ -719,7 +720,7 @@ class _TestMaxPoolSize(_TestPoolingBase):
         # Gevent 0.13.6 bug on Mac, Greenlet.join() hangs if more than
         # about 35 Greenlets share a MongoClient. Apparently fixed in
         # recent Gevent development.
-        nthreads = 50
+        nthreads = 10
 
         rendevous = CreateAndReleaseSocket.Rendezvous(
             nthreads, self.use_greenlets)
@@ -738,8 +739,6 @@ class _TestMaxPoolSize(_TestPoolingBase):
 
         for t in threads:
             self.assertTrue(t.passed)
-
-        time.sleep(2)
 
         # Socket-reclamation doesn't work in Jython
         if not sys.platform.startswith('java'):
@@ -771,6 +770,13 @@ class _TestMaxPoolSize(_TestPoolingBase):
             # Pool._ident._local soon after an old thread has died.
             cx_pool._ident.get()
 
+            print cx_pool._poolrefs
+            print cx_pool._ident._refs
+            for tid, ref in cx_pool._ident._refs.iteritems():
+                print '%r: %r - %r' % (tid, ref, ref())
+                if ref():
+                    objgraph.show_backrefs([ref()], filename='backref-%r.png' % (tid,))
+
             if start_request:
                 self.assertEqual(pool_size, len(cx_pool.sockets))
             else:
@@ -794,6 +800,7 @@ class _TestMaxPoolSize(_TestPoolingBase):
         self._test_max_pool_size(20, 1)
 
     def test_max_pool_size_with_leaked_request(self):
+        gc.set_debug(gc.DEBUG_LEAK|gc.DEBUG_STATS)
         # Call start_request() but not end_request() -- when threads die, they
         # should return their request sockets to the pool.
         self._test_max_pool_size(1, 0)

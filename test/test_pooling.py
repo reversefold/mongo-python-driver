@@ -177,4 +177,10 @@ class TestWaitQueueMultipleThreads(_TestWaitQueueMultiple, unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    class tmp(TestMaxPoolSizeThreads):
+        def __init__(self):
+            pass
+    ut = tmp()
+    ut.setUp()
+    ut.test_max_pool_size_with_leaked_request()
+#    unittest.main()
