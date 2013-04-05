@@ -776,7 +776,6 @@ class _TestMaxPoolSize(_TestPoolingBase):
             # Pool._ident._local soon after an old thread has died.
             for _ in xrange(600):
                 cx_pool._ident.get()
-                cx_pool._ident._local.__dict__.get('a', None)
                 break
                 gc.collect()
                 if pool_size == len(cx_pool.sockets):
