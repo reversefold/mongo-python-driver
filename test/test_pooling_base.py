@@ -80,7 +80,7 @@ class MongoThread(object):
         self.thread.start()
 
     def join(self):
-        self.thread.join(30)
+        self.thread.join(300)
 #        start = time.time()
 #        while time.time() - start < 30:
 #            self.thread.join(1)
@@ -245,7 +245,7 @@ class CreateAndReleaseSocket(MongoThread):
                 self.ready = threading.Event()
 
     def __init__(self, ut, client, start_request, end_request, pool_size,
-                 rendevous):
+                 rendevous=None):
         super(CreateAndReleaseSocket, self).__init__(ut)
         self.client = client
         self.start_request = start_request
@@ -268,21 +268,23 @@ class CreateAndReleaseSocket(MongoThread):
         self.client[DB].test.find_one()
 
         # Don't finish until pool_size threads reach this point
+
         r = self.rendevous
-        r.lock.acquire()
-        r.nthreads_run += 1
-        if ((r.nthreads_run % self.pool_size) == 0
-            or r.nthreads_run == r.nthreads
-        ):
-            log.info('[%r] Last thread at the rendezvous', tident)
-            # Everyone's here, let them finish
-            r.ready.set()
-            r.lock.release()
-        else:
-            log.info('[%r] Waiting at the rendezvous', tident)
-            r.lock.release()
-            r.ready.wait(2) # Wait two seconds
-            assert r.ready.isSet(), "Rendezvous timed out"
+        if r:
+            r.lock.acquire()
+            r.nthreads_run += 1
+            if ((r.nthreads_run % self.pool_size) == 0
+                or r.nthreads_run == r.nthreads
+            ):
+                log.info('[%r] Last thread at the rendezvous', tident)
+                # Everyone's here, let them finish
+                r.ready.set()
+                r.lock.release()
+            else:
+                log.info('[%r] Waiting at the rendezvous', tident)
+                r.lock.release()
+                r.ready.wait(2) # Wait two seconds
+                assert r.ready.isSet(), "Rendezvous timed out"
 
         log.info('[%r] Ending request', tident)
         for i in range(self.end_request):
@@ -727,14 +729,14 @@ class _TestMaxPoolSize(_TestPoolingBase):
 #        from guppy import hpy
 #        hp = hpy()
 #        hp.setrelheap()
-        
-        rendevous = CreateAndReleaseSocket.Rendezvous(
-            nthreads, self.use_greenlets)
+
+#        rendevous = CreateAndReleaseSocket.Rendezvous(
+#            nthreads, self.use_greenlets)
 
         threads = []
         for i in range(nthreads):
             t = CreateAndReleaseSocket(
-                self, c, start_request, end_request, pool_size, rendevous)
+                self, c, start_request, end_request, pool_size)#, rendevous)
             threads.append(t)
 
         for t in threads:
@@ -743,10 +745,12 @@ class _TestMaxPoolSize(_TestPoolingBase):
         for t in threads:
             t.join()
 
-        time.sleep(10)
+        log.info('All threads joined')
 
         for t in threads:
             self.assertTrue(t.passed)
+
+        log.info('Passed')
 
         # Socket-reclamation doesn't work in Jython
         if not sys.platform.startswith('java'):
@@ -776,20 +780,37 @@ class _TestMaxPoolSize(_TestPoolingBase):
             # local from the main thread is a necessary part of this test, and
             # realistic: in a multithreaded web server a new thread will access
             # Pool._ident._local soon after an old thread has died.
-            for _ in xrange(600):
-                cx_pool._ident.get()
-                break
-                gc.collect()
-                if pool_size == len(cx_pool.sockets):
+            log.info('Accessing threadlocal')
+            cx_pool._ident.get()
+#            for _ in xrange(600):
+#                cx_pool._ident.get()
+#                gc.collect()
+#                if pool_size == len(cx_pool.sockets):
+#                    break
+#                log.info('%r %r', pool_size, len(cx_pool.sockets))
+#                time.sleep(1)
+
+            i = 0
+            while i < 300:
+                cx_pool.refresh()
+                if not any(ref() for ref in cx_pool._ident._refs.values()):
+                    log.info('All thread refs are dead')
                     break
-                log.info('%r %r', pool_size, len(cx_pool.sockets))
+                if len(cx_pool.sockets) == pool_size:
+                    log.info('Pool has all of its sockets back')
+                    break
+                if cx_pool._socket_semaphore._value == pool_size:
+                    log.info('Pool semaphore back to pool_size')
+                    break
                 time.sleep(1)
+
+            log.info('Slept')
 
             print cx_pool._ident._refs
             for tid, ref in cx_pool._ident._refs.iteritems():
                 print '%r: %r - %r' % (tid, ref, ref())
-                if ref():
-                    gc.collect()
+#                if ref():
+#                    gc.collect()
                 if ref():
                     print ref()
                     print gc.garbage
@@ -803,9 +824,11 @@ class _TestMaxPoolSize(_TestPoolingBase):
 #                            lambda o: inspect.ismodule(o) and o is not gc and o.__name__ != 'gc' and o != gc),
 #                        filename='backref-chain-%r.png' % (tid,), refcounts=True, backrefs=False)
 
-		
+            log.info('Checking the pool')
+
             if start_request:
-                self.assertEqual(pool_size, len(cx_pool.sockets))
+                self.assertEqual(cx_pool._socket_semaphore._value, pool_size)
+#                self.assertEqual(pool_size, len(cx_pool.sockets))
             else:
                 # Without calling start_request(), threads can safely share
                 # sockets; the number running concurrently, and hence the number
