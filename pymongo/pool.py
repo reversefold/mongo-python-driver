@@ -103,19 +103,24 @@ class Monitor(object):
         """Run until the Pool is collected or an
         unexpected error occurs.
         """
-        while True:
-            self.event.wait(self.refresh_interval)
-            if self.stopped:
-                break
-            self.event.clear()
-            try:
-                self.pool.check_request_socks(force=True)
-            except AutoReconnect:
-                pass
-            # Pool has been collected or there
-            # was an unexpected error.
-            except:
-                break
+        log.info('Pool monitor start')
+        try:
+            while True:
+                self.event.wait(self.refresh_interval)
+                if self.stopped:
+                    break
+                self.event.clear()
+                log.info('Pool monitor checking request socks')
+                try:
+                    self.pool.check_request_socks(force=True)
+                except AutoReconnect:
+                    pass
+                # Pool has been collected or there
+                # was an unexpected error.
+                except:
+                    break
+        finally:
+            log.info('Pool monitor end')
 
 
 class MonitorThread(Monitor, threading.Thread):
@@ -333,9 +338,9 @@ class Pool:
         if self.net_timeout:
             # Start the monitor after we know the configuration is correct.
             if self.use_greenlets:
-                self.__monitor = MonitorGreenlet(self, self.net_timeout / 2)
+                self.__monitor = MonitorGreenlet(self, self.net_timeout / 2000)
             else:
-                self.__monitor = MonitorThread(self, 0.2)#self.net_timeout / 2)
+                self.__monitor = MonitorThread(self, 0.2)#self.net_timeout / 2000)
                 self.__monitor.setDaemon(True)
             register_monitor(self.__monitor)
             self.__monitor.start()
@@ -542,20 +547,23 @@ class Pool:
                 if sock_info not in (NO_REQUEST, NO_SOCKET_YET):
                     self._return_socket(sock_info)
 
+    def refresh(self):
+        self.__monitor.schedule_refresh()
+
     def check_request_socks(self, force=False):
         log.info('Pool.check_request_socks')
         now = time.time()
         for tid in self._tid_to_sock.keys():
             sock_info = self._tid_to_sock.get(tid, None)
-            log.info('Checking %r %r %r %r', tid, sock_info, now - sock_info.last_checkout, self.net_timeout)
+            log.info('[%r] Checking %r %r %r', tid, sock_info, now - sock_info.last_checkout, self.net_timeout)
             if sock_info is None:
                 continue
             if now - sock_info.last_checkout > self.net_timeout:
-                log.info('Socket has not been used for more than %r, closing %r', self.net_timeout, sock_info)
+                log.info('[%r] Socket has not been used for more than %r, closing %r', tid, self.net_timeout, sock_info)
                 # Assuming that the thread has died but is failing to call
                 # on_thread_died, close and return its socket to the pool
                 sock_info.close()
-                self.maybe_return_socket(sock_info)
+                self.maybe_return_socket(sock_info, tid=tid)
                 self._tid_to_sock[tid] = NO_SOCKET_YET
 
     def discard_socket(self, sock_info):
@@ -569,7 +577,7 @@ class Pool:
                 # socket on next get_socket().
                 self._set_request_state(NO_SOCKET_YET)
 
-    def maybe_return_socket(self, sock_info):
+    def maybe_return_socket(self, sock_info, tid=None):
         """Return the socket to the pool unless it's the request socket.
         """
 #        # Catch the case where a socket has already been returned to the pool
@@ -587,9 +595,13 @@ class Pool:
             self.reset()
         elif sock_info not in (NO_REQUEST, NO_SOCKET_YET):
             if sock_info.closed:
+                if tid is None:
+                    tid = self._ident.get()
                 if sock_info.forced:
+                    log.info('[%r] maybe_return_socket sock_info closed and forced %r', tid, sock_info)
                     sock_info.forced = False
                 else:
+                    log.info('[%r] maybe_return_socket sock_info closed, releasing semaphore %r', tid, sock_info)
                     self._socket_semaphore.release()
                 return
 
@@ -699,6 +711,9 @@ class Pool:
                             if request_sock not in (NO_REQUEST, NO_SOCKET_YET):
                                 log.info('[%r] on_thread_died returning request_sock %r', tid, request_sock)
                                 pool._return_socket(request_sock, tid)
+                            else:
+                                log.info('[%r] on_thread_died sock is %s', tid, 'NO_REQUEST' if request_sock == NO_REQUEST else 'NO_SOCKET_YET')
+
                     except:
                         # Random exceptions on interpreter shutdown.
                         try:
