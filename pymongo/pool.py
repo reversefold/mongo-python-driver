@@ -179,7 +179,7 @@ def _closed(sock):
 class SocketInfo(object):
     """Store a socket with some metadata
     """
-    def __init__(self, sock, pool_id, host=None):#, pool=None):
+    def __init__(self, sock, pool_id, host=None, pool=None):
         self.sock = sock
         self.host = host
         self.authset = set()
@@ -190,7 +190,7 @@ class SocketInfo(object):
         # The pool's pool_id changes with each reset() so we can close sockets
         # created before the last reset.
         self.pool_id = pool_id
-#        self.pool = pool
+        self.poolref = weakref.ref(pool)
 
     def close(self):
         self.closed = True
@@ -218,16 +218,19 @@ class SocketInfo(object):
             id(self)
         )
 
-#    def __del__(self):
-#        log.info('SocketInfo.__del__ %r', self)
-#        if self.closed:
-#            log.info('SocketInfo.__del__ already closed %r', self)
-#            return
-#        if self in self.pool.sockets:
-#            log.info('SocketInfo.__del__ already returned %r', self)
-#            return
-#        log.info('SocketInfo.__del__ calling maybe_return_socket %r', self)
-#        self.pool.maybe_return_socket(self)
+    def __del__(self):
+        log.info('SocketInfo.__del__ %r', self)
+        if self.closed:
+            log.info('SocketInfo.__del__ already closed %r', self)
+            return
+        if not self.pool():
+            log.info('SocketInfo.__del__ Pool already gone %r', self)
+            return
+        if self in self.pool().sockets:
+            log.info('SocketInfo.__del__ already returned %r', self)
+            return
+        log.info('SocketInfo.__del__ calling maybe_return_socket %r', self)
+        self.pool().maybe_return_socket(self)
 
 
 # Do *not* explicitly inherit from object or Jython won't call __del__
@@ -443,7 +446,7 @@ class Pool:
                                         "not be configured with SSL support.")
 
         sock.settimeout(self.net_timeout)
-        return SocketInfo(sock, self.pool_id, hostname)#, self)
+        return SocketInfo(sock, self.pool_id, hostname, self)
 
     def get_socket(self, pair=None, force=False):
         """Get a socket from the pool.
