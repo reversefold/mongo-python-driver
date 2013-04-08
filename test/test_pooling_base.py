@@ -16,8 +16,8 @@
 """
 
 import gc
-import inspect
-import objgraph
+#import inspect
+#import objgraph
 import random
 import socket
 import sys
