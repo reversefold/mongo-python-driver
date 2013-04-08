@@ -547,9 +547,9 @@ class Pool:
         now = time.time()
         for tid in self._tid_to_sock.keys():
             sock_info = self._tid_to_sock.get(tid, None)
-            log.info('Checking %r %r %r %r', tid, sock_info, now - sock_info.last_checkout, self.net_timeout)
-            if sock_info is None:
+            if sock_info in (None, NO_REQUEST, NO_SOCKET_YET):
                 continue
+            log.info('Checking %r %r %r %r', tid, sock_info, now - sock_info.last_checkout, self.net_timeout)
             if now - sock_info.last_checkout > self.net_timeout:
                 log.info('Socket has not been used for more than %r, closing %r', self.net_timeout, sock_info)
                 # Assuming that the thread has died but is failing to call
