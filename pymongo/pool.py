@@ -227,14 +227,15 @@ class SocketInfo(object):
         if self.closed:
             log.info('SocketInfo.__del__ already closed %r', self)
             return
-        if not self.pool():
+        pool = self.pool()
+        if not pool:
             log.info('SocketInfo.__del__ Pool already gone %r', self)
             return
-        if self in self.pool().sockets:
+        if self in pool.sockets:
             log.info('SocketInfo.__del__ already returned %r', self)
             return
         log.info('SocketInfo.__del__ calling maybe_return_socket %r', self)
-        self.pool().maybe_return_socket(self)
+        pool.maybe_return_socket(self)
 
 
 # Do *not* explicitly inherit from object or Jython won't call __del__
