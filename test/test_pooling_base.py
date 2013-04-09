@@ -802,6 +802,7 @@ class _TestMaxPoolSize(_TestPoolingBase):
                 if cx_pool._socket_semaphore._value == pool_size:
                     log.info('Pool semaphore back to pool_size')
                     break
+                i += 1
                 time.sleep(1)
 
             time.sleep(1)
