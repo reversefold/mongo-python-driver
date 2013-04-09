@@ -121,7 +121,7 @@ class Monitor(object):
                 # was an unexpected error.
                 except:
                     import traceback
-                    log.info('Exception killing monitor %s', traceback.format_exc())
+                    log.info('Exception, killing monitor %s', traceback.format_exc())
                     break
         finally:
             log.info('Pool monitor end')
