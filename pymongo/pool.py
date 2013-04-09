@@ -342,7 +342,7 @@ class Pool:
                     thread_util.MaxWaitersBoundedSemaphoreThread(
                         self.max_size, max_waiters))
 
-        self._poolrefs = {}
+#        self._poolrefs = {}
         if self.net_timeout:
             # Start the monitor after we know the configuration is correct.
             if self.use_greenlets:
@@ -703,7 +703,7 @@ class Pool:
                 # thread locals in this function, while PyThreadState_Clear()
                 # is in progress can cause leaks, see PYTHON-353.
                 poolref = weakref.ref(self)
-                self._poolrefs.setdefault(ident.get(), []).append(poolref)
+#                self._poolrefs.setdefault(ident.get(), []).append(poolref)
 
                 def on_thread_died(ref):
                     try:
