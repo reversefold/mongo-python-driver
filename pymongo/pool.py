@@ -103,19 +103,28 @@ class Monitor(object):
         """Run until the Pool is collected or an
         unexpected error occurs.
         """
-        while True:
-            self.event.wait(self.refresh_interval)
-            if self.stopped:
-                break
-            self.event.clear()
-            try:
-                self.pool.check_request_socks(force=True)
-            except AutoReconnect:
-                pass
-            # Pool has been collected or there
-            # was an unexpected error.
-            except:
-                break
+        log.info('Pool monitor start')
+        try:
+            while True:
+                self.event.wait(self.refresh_interval)
+                if self.stopped:
+                    break
+                self.event.clear()
+                log.info('Pool monitor checking request socks')
+                try:
+                    self.pool.check_request_socks(force=True)
+                except AutoReconnect:
+                    import traceback
+                    log.info('AutoReconnect in monitor %s', traceback.format_exc())
+                    pass
+                # Pool has been collected or there
+                # was an unexpected error.
+                except:
+                    import traceback
+                    log.info('Exception, killing monitor %s', traceback.format_exc())
+                    break
+        finally:
+            log.info('Pool monitor end')
 
 
 class MonitorThread(Monitor, threading.Thread):
@@ -132,32 +141,32 @@ class MonitorThread(Monitor, threading.Thread):
         self.monitor()
 
 
-have_gevent = False
-try:
-    from gevent import Greenlet
-    from gevent.event import Event
-
-    # Used by ReplicaSetConnection
-    from gevent.local import local as gevent_local
-    have_gevent = True
-
-    class MonitorGreenlet(Monitor, Greenlet):
-        """Greenlet based replica set monitor.
-        """
-        def __init__(self, pool, refresh_interval):
-            Monitor.__init__(self, pool, Event, refresh_interval)
-            Greenlet.__init__(self)
-
-        # Don't override `run` in a Greenlet. Add _run instead.
-        # Refer to gevent's Greenlet docs and source for more
-        # information.
-        def _run(self):
-            """Define Greenlet's _run method.
-            """
-            self.monitor()
-
-except ImportError:
-    pass
+#have_gevent = False
+#try:
+#    from gevent import Greenlet
+#    from gevent.event import Event
+#
+#    # Used by ReplicaSetConnection
+#    from gevent.local import local as gevent_local
+#    have_gevent = True
+#
+#    class MonitorGreenlet(Monitor, Greenlet):
+#        """Greenlet based replica set monitor.
+#        """
+#        def __init__(self, pool, refresh_interval):
+#            Monitor.__init__(self, pool, Event, refresh_interval)
+#            Greenlet.__init__(self)
+#
+#        # Don't override `run` in a Greenlet. Add _run instead.
+#        # Refer to gevent's Greenlet docs and source for more
+#        # information.
+#        def _run(self):
+#            """Define Greenlet's _run method.
+#            """
+#            self.monitor()
+#
+#except ImportError:
+#    pass
 
 
 def _closed(sock):
@@ -174,7 +183,7 @@ def _closed(sock):
 class SocketInfo(object):
     """Store a socket with some metadata
     """
-    def __init__(self, sock, pool_id, host=None):#, pool=None):
+    def __init__(self, sock, pool_id, host=None, pool=None):
         self.sock = sock
         self.host = host
         self.authset = set()
@@ -185,7 +194,7 @@ class SocketInfo(object):
         # The pool's pool_id changes with each reset() so we can close sockets
         # created before the last reset.
         self.pool_id = pool_id
-#        self.pool = pool
+        self.poolref = weakref.ref(pool)
 
     def close(self):
         self.closed = True
@@ -213,16 +222,20 @@ class SocketInfo(object):
             id(self)
         )
 
-#    def __del__(self):
-#        log.info('SocketInfo.__del__ %r', self)
-#        if self.closed:
-#            log.info('SocketInfo.__del__ already closed %r', self)
-#            return
-#        if self in self.pool.sockets:
-#            log.info('SocketInfo.__del__ already returned %r', self)
-#            return
-#        log.info('SocketInfo.__del__ calling maybe_return_socket %r', self)
-#        self.pool.maybe_return_socket(self)
+    def __del__(self):
+        log.info('SocketInfo.__del__ %r', self)
+        if self.closed:
+            log.info('SocketInfo.__del__ already closed %r', self)
+            return
+        pool = self.poolref()
+        if not pool:
+            log.info('SocketInfo.__del__ Pool already gone %r', self)
+            return
+        if self in pool.sockets:
+            log.info('SocketInfo.__del__ already returned %r', self)
+            return
+        log.info('SocketInfo.__del__ calling maybe_return_socket %r', self)
+        pool.maybe_return_socket(self)
 
 
 # Do *not* explicitly inherit from object or Jython won't call __del__
@@ -329,16 +342,16 @@ class Pool:
                     thread_util.MaxWaitersBoundedSemaphoreThread(
                         self.max_size, max_waiters))
 
-        self._poolrefs = {}
+#        self._poolrefs = {}
         if self.net_timeout:
             # Start the monitor after we know the configuration is correct.
             if self.use_greenlets:
-                self.__monitor = MonitorGreenlet(self, self.net_timeout / 2)
+                self.__monitor = None #MonitorGreenlet(self, self.net_timeout / 2.0)
             else:
-                self.__monitor = MonitorThread(self, 0.2)#self.net_timeout / 2)
+                self.__monitor = MonitorThread(self, self.net_timeout / 2.0)
                 self.__monitor.setDaemon(True)
-            register_monitor(self.__monitor)
-            self.__monitor.start()
+                register_monitor(self.__monitor)
+                self.__monitor.start()
         else:
             self.__monitor = None
 
@@ -438,7 +451,7 @@ class Pool:
                                         "not be configured with SSL support.")
 
         sock.settimeout(self.net_timeout)
-        return SocketInfo(sock, self.pool_id, hostname)#, self)
+        return SocketInfo(sock, self.pool_id, hostname, self)
 
     def get_socket(self, pair=None, force=False):
         """Get a socket from the pool.
@@ -542,6 +555,12 @@ class Pool:
                 if sock_info not in (NO_REQUEST, NO_SOCKET_YET):
                     self._return_socket(sock_info)
 
+    def refresh(self):
+        if self.__monitor is None:
+            self.check_request_socks()
+        else:
+            self.__monitor.schedule_refresh()
+
     def check_request_socks(self, force=False):
         log.info('Pool.check_request_socks')
         now = time.time()
@@ -549,13 +568,13 @@ class Pool:
             sock_info = self._tid_to_sock.get(tid, None)
             if sock_info in (None, NO_REQUEST, NO_SOCKET_YET):
                 continue
-            log.info('Checking %r %r %r %r', tid, sock_info, now - sock_info.last_checkout, self.net_timeout)
+            log.info('[%r] Checking %r %r %r', tid, sock_info, now - sock_info.last_checkout, self.net_timeout)
             if now - sock_info.last_checkout > self.net_timeout:
-                log.info('Socket has not been used for more than %r, closing %r', self.net_timeout, sock_info)
+                log.info('[%r] Socket has not been used for more than %r, closing %r', tid, self.net_timeout, sock_info)
                 # Assuming that the thread has died but is failing to call
                 # on_thread_died, close and return its socket to the pool
                 sock_info.close()
-                self.maybe_return_socket(sock_info)
+                self.maybe_return_socket(sock_info, tid=tid)
                 self._tid_to_sock[tid] = NO_SOCKET_YET
 
     def discard_socket(self, sock_info):
@@ -569,7 +588,7 @@ class Pool:
                 # socket on next get_socket().
                 self._set_request_state(NO_SOCKET_YET)
 
-    def maybe_return_socket(self, sock_info):
+    def maybe_return_socket(self, sock_info, tid=None):
         """Return the socket to the pool unless it's the request socket.
         """
 #        # Catch the case where a socket has already been returned to the pool
@@ -587,9 +606,13 @@ class Pool:
             self.reset()
         elif sock_info not in (NO_REQUEST, NO_SOCKET_YET):
             if sock_info.closed:
+                if tid is None:
+                    tid = self._ident.get()
                 if sock_info.forced:
+                    log.info('[%r] maybe_return_socket sock_info closed and forced %r', tid, sock_info)
                     sock_info.forced = False
                 else:
+                    log.info('[%r] maybe_return_socket sock_info closed, releasing semaphore %r', tid, sock_info)
                     self._socket_semaphore.release()
                 return
 
@@ -683,7 +706,7 @@ class Pool:
                 # thread locals in this function, while PyThreadState_Clear()
                 # is in progress can cause leaks, see PYTHON-353.
                 poolref = weakref.ref(self)
-                self._poolrefs.setdefault(ident.get(), []).append(poolref)
+#                self._poolrefs.setdefault(ident.get(), []).append(poolref)
 
                 def on_thread_died(ref):
                     try:
@@ -699,6 +722,9 @@ class Pool:
                             if request_sock not in (NO_REQUEST, NO_SOCKET_YET):
                                 log.info('[%r] on_thread_died returning request_sock %r', tid, request_sock)
                                 pool._return_socket(request_sock, tid)
+                            else:
+                                log.info('[%r] on_thread_died sock is %s', tid, 'NO_REQUEST' if request_sock == NO_REQUEST else 'NO_SOCKET_YET')
+
                     except:
                         # Random exceptions on interpreter shutdown.
                         try:

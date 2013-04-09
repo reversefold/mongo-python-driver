@@ -75,8 +75,8 @@ class ThreadIdent(Ident):
     def get(self):
         if not hasattr(self._local, 'vigil'):
             vigil = ThreadIdent.ThreadVigil()
-            while id(vigil) in self._refs:
-                vigil = ThreadIdent.ThreadVigil()
+#            while id(vigil) in self._refs:
+#                vigil = ThreadIdent.ThreadVigil()
             self._local.vigil = vigil
         tid = id(self._local.vigil)
         return tid
@@ -195,6 +195,10 @@ class Semaphore:
 
     def __exit__(self, t, v, tb):
         self.release()
+
+    @property
+    def counter(self):
+        return self._value
 
 
 class BoundedSemaphore(Semaphore):
