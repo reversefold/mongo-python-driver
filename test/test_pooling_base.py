@@ -804,6 +804,7 @@ class _TestMaxPoolSize(_TestPoolingBase):
                     break
                 time.sleep(1)
 
+            time.sleep(1)
             log.info('Slept')
 
             print cx_pool._ident._refs
@@ -853,7 +854,11 @@ class _TestMaxPoolSize(_TestPoolingBase):
 #        gc.set_debug(gc.DEBUG_STATS|gc.DEBUG_LEAK)
         # Call start_request() but not end_request() -- when threads die, they
         # should return their request sockets to the pool.
-        self._test_max_pool_size(1, 0)
+        try:
+            log.info('Starting test_max_pool_size_with_leaked_request')
+            self._test_max_pool_size(1, 0)
+        finally:
+            log.info('Exiting test_max_pool_size_with_leaked_request')
 
     def test_max_pool_size_with_end_request_only(self):
         # Call end_request() but not start_request()
