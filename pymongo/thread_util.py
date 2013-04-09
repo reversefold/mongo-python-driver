@@ -196,6 +196,10 @@ class Semaphore:
     def __exit__(self, t, v, tb):
         self.release()
 
+    @property
+    def counter(self):
+        return self._value
+
 
 class BoundedSemaphore(Semaphore):
     """Semaphore that checks that # releases is <= # acquires"""

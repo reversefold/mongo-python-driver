@@ -791,7 +791,7 @@ class _TestMaxPoolSize(_TestPoolingBase):
 #                time.sleep(1)
 
             i = 0
-            while i < 300:
+            while i < 30:
                 cx_pool.refresh()
                 if not any(ref() for ref in cx_pool._ident._refs.values()):
                     log.info('All thread refs are dead')
@@ -808,28 +808,28 @@ class _TestMaxPoolSize(_TestPoolingBase):
             time.sleep(1)
             log.info('Slept')
 
-            print cx_pool._ident._refs
-            for tid, ref in cx_pool._ident._refs.iteritems():
-                print '%r: %r - %r' % (tid, ref, ref())
+#            print cx_pool._ident._refs
+#            for tid, ref in cx_pool._ident._refs.iteritems():
+#                print '%r: %r - %r' % (tid, ref, ref())
+##                if ref():
+##                    gc.collect()
 #                if ref():
-#                    gc.collect()
-                if ref():
-                    print ref()
-                    print gc.garbage
-                    print gc.get_referrers(ref())
-#                    heap = hp.heap()
-#                    import ipdb; ipdb.set_trace()
-#                    objgraph.show_backrefs([ref()], filename='backref-%r.png' % (tid,), refcounts=True)
-#                    objgraph.show_chain(
-#                        objgraph.find_backref_chain(
-#                            ref(),
-#                            lambda o: inspect.ismodule(o) and o is not gc and o.__name__ != 'gc' and o != gc),
-#                        filename='backref-chain-%r.png' % (tid,), refcounts=True, backrefs=False)
+#                    print ref()
+#                    print gc.garbage
+#                    print gc.get_referrers(ref())
+##                    heap = hp.heap()
+##                    import ipdb; ipdb.set_trace()
+##                    objgraph.show_backrefs([ref()], filename='backref-%r.png' % (tid,), refcounts=True)
+##                    objgraph.show_chain(
+##                        objgraph.find_backref_chain(
+##                            ref(),
+##                            lambda o: inspect.ismodule(o) and o is not gc and o.__name__ != 'gc' and o != gc),
+##                        filename='backref-chain-%r.png' % (tid,), refcounts=True, backrefs=False)
 
             log.info('Checking the pool')
 
             if start_request:
-                self.assertEqual(cx_pool._socket_semaphore._value, pool_size)
+                self.assertEqual(cx_pool._socket_semaphore.counter, pool_size)
 #                self.assertEqual(pool_size, len(cx_pool.sockets))
             else:
                 # Without calling start_request(), threads can safely share
