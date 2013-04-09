@@ -227,7 +227,7 @@ class SocketInfo(object):
         if self.closed:
             log.info('SocketInfo.__del__ already closed %r', self)
             return
-        pool = self.pool()
+        pool = self.poolref()
         if not pool:
             log.info('SocketInfo.__del__ Pool already gone %r', self)
             return
