@@ -141,32 +141,32 @@ class MonitorThread(Monitor, threading.Thread):
         self.monitor()
 
 
-have_gevent = False
-try:
-    from gevent import Greenlet
-    from gevent.event import Event
-
-    # Used by ReplicaSetConnection
-    from gevent.local import local as gevent_local
-    have_gevent = True
-
-    class MonitorGreenlet(Monitor, Greenlet):
-        """Greenlet based replica set monitor.
-        """
-        def __init__(self, pool, refresh_interval):
-            Monitor.__init__(self, pool, Event, refresh_interval)
-            Greenlet.__init__(self)
-
-        # Don't override `run` in a Greenlet. Add _run instead.
-        # Refer to gevent's Greenlet docs and source for more
-        # information.
-        def _run(self):
-            """Define Greenlet's _run method.
-            """
-            self.monitor()
-
-except ImportError:
-    pass
+#have_gevent = False
+#try:
+#    from gevent import Greenlet
+#    from gevent.event import Event
+#
+#    # Used by ReplicaSetConnection
+#    from gevent.local import local as gevent_local
+#    have_gevent = True
+#
+#    class MonitorGreenlet(Monitor, Greenlet):
+#        """Greenlet based replica set monitor.
+#        """
+#        def __init__(self, pool, refresh_interval):
+#            Monitor.__init__(self, pool, Event, refresh_interval)
+#            Greenlet.__init__(self)
+#
+#        # Don't override `run` in a Greenlet. Add _run instead.
+#        # Refer to gevent's Greenlet docs and source for more
+#        # information.
+#        def _run(self):
+#            """Define Greenlet's _run method.
+#            """
+#            self.monitor()
+#
+#except ImportError:
+#    pass
 
 
 def _closed(sock):
@@ -346,12 +346,12 @@ class Pool:
         if self.net_timeout:
             # Start the monitor after we know the configuration is correct.
             if self.use_greenlets:
-                self.__monitor = MonitorGreenlet(self, self.net_timeout / 2000)
+                self.__monitor = None #MonitorGreenlet(self, self.net_timeout / 2.0)
             else:
-                self.__monitor = MonitorThread(self, 0.2)#self.net_timeout / 2000)
+                self.__monitor = MonitorThread(self, self.net_timeout / 2.0)
                 self.__monitor.setDaemon(True)
-            register_monitor(self.__monitor)
-            self.__monitor.start()
+                register_monitor(self.__monitor)
+                self.__monitor.start()
         else:
             self.__monitor = None
 
@@ -556,7 +556,10 @@ class Pool:
                     self._return_socket(sock_info)
 
     def refresh(self):
-        self.__monitor.schedule_refresh()
+        if self.__monitor is None:
+            self.check_request_socks()
+        else:
+            self.__monitor.schedule_refresh()
 
     def check_request_socks(self, force=False):
         log.info('Pool.check_request_socks')
