@@ -416,8 +416,9 @@ class TestCollection(unittest.TestCase):
                 "coordinates": [[[40,5], [40,6], [41,6], [41,5], [40,5]]]}
         query = {"geo": {"$within": {"$geometry": poly}}}
 
-        self.assertEqual("S2Cursor",
-                         db.test.find(query).explain()['cursor'])
+        self.assertTrue(
+            db.test.find(query).explain()['cursor'].startswith('S2Cursor'))
+
         db.test.drop_indexes()
 
     def test_index_hashed(self):
@@ -1046,7 +1047,7 @@ class TestCollection(unittest.TestCase):
             None, db.test.update({"_id": id}, {"$inc": {"x": 1}}, w=0))
 
         if v19:
-            self.assertTrue(db.error()["err"].startswith("E11000"))
+            self.assertTrue("E11000" in db.error()["err"])
         elif v113minus:
             self.assertTrue(db.error()["err"].startswith("E11001"))
         else:
